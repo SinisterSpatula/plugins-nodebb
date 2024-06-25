@@ -34,7 +34,7 @@
 
 <hr />
 
-<h4>FUCKY FUCK FUCK! [[user:avatar-background-colour]]</h4>
+<h4>FUCKY FUCK FUCK222! [[user:avatar-background-colour]]</h4>
 
 <label><input type="radio" name="icon:bgColor" value="transparent" /><span></span></label>
 {{{ each iconBackgrounds }}}
