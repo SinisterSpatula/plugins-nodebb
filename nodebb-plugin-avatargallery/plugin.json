@@ -4,7 +4,6 @@
   "library": "./library.js",
   "hooks": [
     { "hook": "static:app.load", "method": "init" },
-    { "hook": "static:api.routes", "method": "addRoutes" },
     { "hook": "filter:admin.header.build", "method": "addAdminNavigation" }
   ],
   "staticDirs": {
@@ -17,5 +16,5 @@
     "../client/quickstart.js": "./static/lib/quickstart.js",
     "../admin/plugins/quickstart.js": "./static/lib/admin.js"
   },
-  "templates": "static/templates"
+  "templates": "./templates"
 }

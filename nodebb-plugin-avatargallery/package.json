@@ -1,7 +1,7 @@
 {
   "name": "nodebb-plugin-avatargallery",
-  "version": "0.4.3",
-  "description": "User avatars are a great way to personalize your NodeBB experience. This plugin allows you to upload a gallery of images and then users can select one of them as their avatar.",
+  "version": "1.0.0",
+  "description": "This plugin allows admins to upload a gallery of images and then users can select one of them as their avatar.",
   "main": "library.js",
   "repository": {
     "type": "git",
