@@ -16,5 +16,5 @@
     "../client/quickstart.js": "./static/lib/quickstart.js",
     "../admin/plugins/quickstart.js": "./static/lib/admin.js"
   },
-  "templates": "./templates"
+  "templates": "./static/templates"
 }
