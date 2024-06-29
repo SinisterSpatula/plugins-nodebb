@@ -1,13 +1,13 @@
 'use strict';
 
-const nconf = require.main.require('nconf');
 const winston = require.main.require('winston');
 const meta = require.main.require('./src/meta');
+const controllers = require('./lib/controllers');
 
 const plugin = {};
 
 plugin.init = async (params) => {
-  const { router /* , middleware , controllers */ } = params;
+  const { router, middleware } = params;
   try {
     // Disable avatar uploads
     meta.config.allowProfileImageUploads = 0;
@@ -21,6 +21,9 @@ plugin.activate = async function () {
   try {
     // Disable allowProfileImageUploads
     meta.config.allowProfileImageUploads = 0;
+    // Set up routes for the admin page
+    router.get('/admin/plugins/avatargallery', middleware.admin.buildHeader, controllers.renderAdminPage);
+    router.get('/api/admin/plugins/avatargallery', controllers.renderAdminPage);
     winston.info('[plugins/avatargallery] activated and avatar uploads disabled');
   } catch (err) {
     winston.warn('[plugins/avatargallery] Error activating plugin:', err);
@@ -45,6 +48,15 @@ plugin.uploadImage = function (data) {
     throw new Error('Unable to upload user profile images while avatargallery plugin is enabled.');
   }
   return data;
+};
+
+plugin.addAdminNavigation = function (header, callback) {
+  header.plugins.push({
+    route: '/plugins/avatargallery',
+    icon: 'fa-picture-o',
+    name: 'Avatar Gallery',
+  });
+  callback(null, header);
 };
 
 module.exports = plugin;

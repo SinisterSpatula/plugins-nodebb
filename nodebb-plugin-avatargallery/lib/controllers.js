@@ -2,8 +2,8 @@
 
 const Controllers = module.exports;
 
-Controllers.renderAdminPage = function (req, res/* , next */) {
-	/*
+Controllers.renderAdminPage = function (req, res) {
+  /*
 		Make sure the route matches your path to template exactly.
 
 		If your route was:
@@ -13,8 +13,7 @@ Controllers.renderAdminPage = function (req, res/* , next */) {
 		and you would render it like so:
 			res.render('some/complex/route');
 	*/
-
-	res.render('admin/plugins/quickstart', {
-		title: 'Quick Start',
-	});
+  res.render('admin/plugins/avatargallery', {
+    title: 'Avatar Gallery',
+  });
 };

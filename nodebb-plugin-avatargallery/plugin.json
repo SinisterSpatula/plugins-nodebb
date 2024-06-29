@@ -6,7 +6,8 @@
     { "hook": "static:app.load", "method": "init" },
     { "hook": "filter:uploadImage", "method": "uploadImage" },
     { "hook": "action:plugin.activate", "method": "activate" },
-    { "hook": "action:plugin.deactivate", "method": "deactivate" }
+    { "hook": "action:plugin.deactivate", "method": "deactivate" },
+    { "hook": "filter:admin.header.build", "method": "addAdminNavigation" }
   ],
   "staticDirs": {
     "static": "./static"
@@ -18,5 +19,15 @@
     "../client/quickstart.js": "./public/lib/quickstart.js",
     "../admin/plugins/quickstart.js": "./public/lib/admin.js"
   },
-  "templates": "templates"
+  "templates": "templates",
+  "routes": [
+    {
+      "route": "/admin/plugins/avatargallery",
+      "method": "get",
+      "options": {
+        "auth": true,
+        "admin": true
+      }
+    }
+  ]
 }
