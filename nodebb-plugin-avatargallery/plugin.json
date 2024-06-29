@@ -19,15 +19,5 @@
     "../client/quickstart.js": "./public/lib/quickstart.js",
     "../admin/plugins/quickstart.js": "./public/lib/admin.js"
   },
-  "templates": "templates",
-  "routes": [
-    {
-      "route": "/admin/plugins/avatargallery",
-      "method": "get",
-      "options": {
-        "auth": true,
-        "admin": true
-      }
-    }
-  ]
+  "templates": "templates"
 }
