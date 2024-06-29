@@ -4,7 +4,9 @@
   "library": "./library.js",
   "hooks": [
     { "hook": "static:app.load", "method": "init" },
-    { "hook": "filter:uploadImage", "method": "uploadImage" }
+    { "hook": "filter:uploadImage", "method": "uploadImage" },
+    { "hook": "action:plugin.activate", "method": "activate" },
+    { "hook": "action:plugin.deactivate", "method": "deactivate" }
   ],
   "staticDirs": {
     "static": "./static"
