@@ -1,11 +1,10 @@
 {
   "id": "nodebb-plugin-avatargallery",
-  "url": "https://github.com/NodeBB/nodebb-plugin-quickstart",
+  "url": "https://github.com/SinisterSpatula/nodebb-plugin-avatargallery",
   "library": "./library.js",
   "hooks": [
     { "hook": "static:app.load", "method": "init" },
-    { "hook": "static:api.routes", "method": "addRoutes" },
-    { "hook": "filter:admin.header.build", "method": "addAdminNavigation" }
+    { "hook": "filter:uploadImage", "method": "uploadImage" }
   ],
   "staticDirs": {
     "static": "./static"
