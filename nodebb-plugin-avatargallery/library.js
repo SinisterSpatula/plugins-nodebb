@@ -12,7 +12,8 @@ plugin.init = async (params) => {
   const { router } = params;
   try {
     // Disable avatar uploads
-    meta.config.allowProfileImageUploads = 0;
+    // meta.config.allowProfileImageUploads = 0;
+    await meta.configs.set('allowProfileImageUploads', 0);
     routeHelpers.setupAdminPageRoute(router, '/admin/plugins/avatargallery', controllers.renderAdminPage);
     winston.info('[plugins/avatargallery] plugin initialized and avatar uploads disabled');
   } catch (err) {
@@ -23,7 +24,7 @@ plugin.init = async (params) => {
 plugin.activate = async function () {
   try {
     // Disable allowProfileImageUploads
-    meta.config.allowProfileImageUploads = 0;
+    await meta.configs.set('allowProfileImageUploads', 0);
     // Set up routes for the admin page
     winston.info('[plugins/avatargallery] activated and avatar uploads disabled');
   } catch (err) {
@@ -34,7 +35,7 @@ plugin.activate = async function () {
 plugin.deactivate = async function (params) {
   try {
     // Enable allowProfileImageUploads
-    meta.config.allowProfileImageUploads = 1;
+    await meta.configs.set('allowProfileImageUploads', 1);
     winston.info('[plugins/avatargallery] deactivated and avatar uploads enabled');
   } catch (err) {
     winston.warn(`[plugins/avatargallery] Error deactivating plugin: ${err}`);

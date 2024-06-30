@@ -12,12 +12,9 @@
   "staticDirs": {
     "static": "./static"
   },
-  "scss": ["scss/quickstart.scss"],
-  "scripts": ["public/lib/main.js"],
-  "acpScripts": ["public/lib/acp-main.js"],
+  "scss": ["public/scss/avatargallery.scss"],
   "modules": {
-    "../client/quickstart.js": "./public/lib/quickstart.js",
-    "../admin/plugins/quickstart.js": "./public/lib/admin.js"
+    "..admin/plugins/avatargallery": "./lib/admin.js"
   },
   "templates": "templates"
 }

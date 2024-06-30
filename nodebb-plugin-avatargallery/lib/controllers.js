@@ -15,5 +15,22 @@ Controllers.renderAdminPage = function (req, res) {
 	*/
   res.render('admin/plugins/avatargallery', {
     title: 'Avatar Gallery',
+    avatars: [
+      {
+        id: 1,
+        name: 'Avatar 1',
+        path: '/assets/uploads/profile/uid-1/1-profileavatar-1719727087917.jpeg?1719727087926',
+      },
+      {
+        id: 2,
+        name: 'Avatar 2',
+        path: '/assets/uploads/profile/uid-1/1-profileavatar-1719727087917.jpeg?1719727087926',
+      },
+      {
+        id: 3,
+        name: 'Avatar 3',
+        path: '/assets/uploads/profile/uid-1/1-profileavatar-1719727087917.jpeg?1719727087926',
+      },
+    ],
   });
 };

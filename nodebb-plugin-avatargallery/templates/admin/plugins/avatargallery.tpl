@@ -10,7 +10,7 @@
                 <div class="card-body">
                     <div class="row mb-3">
                         <div class="col-lg-6">
-                            <button id="add-avatar" class="btn btn-primary">
+                            <button id="add-avatar" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAvatarModal">
                                 <i class="fa fa-plus"></i> Add New Avatar
                             </button>
                         </div>
@@ -47,7 +47,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addAvatarModalLabel">Add New Avatar</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -64,7 +64,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" id="submit-avatar">Add Avatar</button>
             </div>
         </div>
