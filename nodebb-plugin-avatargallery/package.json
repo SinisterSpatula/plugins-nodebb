@@ -1,17 +1,18 @@
 {
   "name": "nodebb-plugin-avatargallery",
   "version": "0.4.3",
-  "description": "A starter kit for quickly creating NodeBB plugins",
+  "description": "A NodeBB plugin to display a gallery of avatars that users can select from and which admins can manage.",
   "main": "library.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nodebb/nodebb-plugin-quickstart"
+    "url": "https://github.com/SinisterSpatula/nodebb-plugin-avatargallery"
   },
   "keywords": [
     "nodebb",
     "plugin",
-    "quickstart",
-    "shell"
+    "avatargallery",
+    "avatar",
+    "gallery"
   ],
   "husky": {
     "hooks": {
@@ -27,7 +28,7 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nodebb/nodebb-plugin-quickstart/issues"
+    "url": "https://github.com/SinisterSpatula/nodebb-plugin-avatargallery/issues"
   },
   "readmeFilename": "README.md",
   "nbbpm": {

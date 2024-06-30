@@ -14,7 +14,7 @@
   },
   "scss": ["public/scss/avatargallery.scss"],
   "modules": {
-    "..admin/plugins/avatargallery": "./lib/admin.js"
+    "../admin/plugins/avatargallery.js": "./lib/admin.js"
   },
   "templates": "templates"
 }
