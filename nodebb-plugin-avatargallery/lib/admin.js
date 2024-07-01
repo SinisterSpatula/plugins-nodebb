@@ -13,22 +13,16 @@ define('admin/plugins/avatargallery', ['api'], function (api) {
 
       // Add your AJAX call here to submit the new avatar to your backend
       // Example:
-      // $.ajax({
-      //     url: '/api/admin/plugins/avatargallery/add',
-      //     type: 'POST',
-      //     data: formData,
-      //     processData: false,
-      //     contentType: false,
-      //     success: function(response) {
-      //         // Add the new avatar to the UI
-      //         addAvatarToUI(response);
-      //         $('#addAvatarModal').modal('hide');
-      //     },
-      //     error: function(error) {
-      //         // Handle error
-      //         console.error('Error adding avatar:', error);
-      //     }
-      // });
+      // api.post('/admin/plugins/avatargallery/add', formData)
+      //   .then((response) => {
+      //     // Add the new avatar to the UI
+      //     addAvatarToUI(response);
+      //     $('#addAvatarModal').modal('hide');
+      //   })
+      //   .catch((error) => {
+      //     // Handle error
+      //     console.error('Error adding avatar:', error);
+      //   });
 
       // For now, let's just log and hide the modal
       console.log('Adding avatar:', formData);
@@ -36,7 +30,7 @@ define('admin/plugins/avatargallery', ['api'], function (api) {
     });
 
     // When the delete button is clicked, show the confirmation modal
-    $('.delete-avatar').on('click', function () {
+    $('#avatar-container').on('click', '.delete-avatar', function () {
       avatarToDelete = $(this).data('id');
       $('#deleteAvatarModal').modal('show');
     });
@@ -45,60 +39,69 @@ define('admin/plugins/avatargallery', ['api'], function (api) {
       // Handle search/filtering
       console.log('Searching for ' + $(this).val());
     });
-    console.log('Avatar Gallery loaded admin panel script initialized!');
-  };
 
-  $('.rename-avatar').on('click', function () {
-    var avatarId = $(this).data('id');
-    var currentName = $(this).closest('.card').find('.card-title').text();
-    $('#rename-avatar-id').val(avatarId);
-    $('#new-avatar-name').val(currentName);
-    $('#renameAvatarModal').modal('show');
-  });
+    // When the edit button is clicked, show the edit modal
+    $('#avatar-container').on('click', '.edit-avatar', function () {
+      var avatarId = $(this).data('id');
+      var card = $(this).closest('.card');
+      var currentName = card.find('.card-title').text();
+      var currentAccess = card.find('.card-text small').text();
 
-  $('#submit-rename-avatar').on('click', function () {
-    var avatarId = $('#rename-avatar-id').val();
-    var newName = $('#new-avatar-name').val();
+      $('#edit-avatar-id').val(avatarId);
+      $('#edit-avatar-name').val(currentName);
+      $('#edit-avatar-access').val(currentAccess.toLowerCase().replace(/ /g, '_'));
+      $('#editAvatarModal').modal('show');
+    });
 
-    // Add your AJAX call here to submit the new name to your backend
-    // On success, update the avatar name in the UI and close the modal
-    // Example:
-    // $.post('/api/admin/plugins/avatargallery/rename', { id: avatarId, name: newName })
-    //     .done(function(response) {
-    //         // Update UI
-    //         $('[data-id="' + avatarId + '"]').closest('.card').find('.card-title').text(newName);
-    //         $('#renameAvatarModal').modal('hide');
-    //     })
-    //     .fail(function(error) {
-    //         // Handle error
-    //     });
-  });
+    $('#submit-edit-avatar').on('click', function () {
+      var avatarId = $('#edit-avatar-id').val();
+      var newName = $('#edit-avatar-name').val();
+      var newAccess = $('#edit-avatar-access').val();
 
-  // When the delete is confirmed in the modal
-  $('#confirm-delete-avatar').on('click', function () {
-    if (avatarToDelete) {
-      // Add your AJAX call here to delete the avatar
+      // Add your AJAX call here to submit the updated avatar info to your backend
       // Example:
-      // $.ajax({
-      //     url: '/api/admin/plugins/avatargallery/delete',
-      //     type: 'DELETE',
-      //     data: { id: avatarToDelete },
-      //     success: function(response) {
-      //         // Remove the avatar from the UI
-      //         $('[data-id="' + avatarToDelete + '"]').closest('.col-md-3').remove();
-      //         $('#deleteAvatarModal').modal('hide');
-      //     },
-      //     error: function(error) {
-      //         // Handle error
-      //         console.error('Error deleting avatar:', error);
-      //     }
-      // });
+      // api.put('/admin/plugins/avatargallery/edit', { id: avatarId, name: newName, accessLevel: newAccess })
+      //   .then((response) => {
+      //     // Update UI
+      //     var card = $('[data-id="' + avatarId + '"]').closest('.card');
+      //     card.find('.card-title').text(newName);
+      //     card.find('.card-text small').text(newAccess.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()));
+      //     $('#editAvatarModal').modal('hide');
+      //   })
+      //   .catch((error) => {
+      //     // Handle error
+      //     console.error('Error updating avatar:', error);
+      //   });
 
       // For now, let's just log and hide the modal
-      console.log('Deleting avatar with ID:', avatarToDelete);
-      $('#deleteAvatarModal').modal('hide');
-    }
-  });
+      console.log('Updating avatar:', { id: avatarId, name: newName, accessLevel: newAccess });
+      $('#editAvatarModal').modal('hide');
+    });
+
+    // When the delete is confirmed in the modal
+    $('#confirm-delete-avatar').on('click', function () {
+      if (avatarToDelete) {
+        // Add your AJAX call here to delete the avatar
+        // Example:
+        // api.del('/admin/plugins/avatargallery/delete', { id: avatarToDelete })
+        //   .then((response) => {
+        //     // Remove the avatar from the UI
+        //     $('[data-id="' + avatarToDelete + '"]').closest('.col-12').remove();
+        //     $('#deleteAvatarModal').modal('hide');
+        //   })
+        //   .catch((error) => {
+        //     // Handle error
+        //     console.error('Error deleting avatar:', error);
+        //   });
+
+        // For now, let's just log and hide the modal
+        console.log('Deleting avatar with ID:', avatarToDelete);
+        $('#deleteAvatarModal').modal('hide');
+      }
+    });
+
+    console.log('Avatar Gallery loaded admin panel script initialized!');
+  };
 
   return AvatarGallery;
 });
