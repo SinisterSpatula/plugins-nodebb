@@ -6,8 +6,33 @@ define('admin/plugins/avatargallery', ['api'], function (api) {
 
   AvatarGallery.init = function () {
     $('#submit-avatar').on('click', function () {
-      // Handle form submission
-      console.log('Submitting avatar');
+      var formData = new FormData();
+      formData.append('name', $('#avatar-name').val());
+      formData.append('file', $('#avatar-file')[0].files[0]);
+      formData.append('accessLevel', $('#avatar-access').val());
+
+      // Add your AJAX call here to submit the new avatar to your backend
+      // Example:
+      // $.ajax({
+      //     url: '/api/admin/plugins/avatargallery/add',
+      //     type: 'POST',
+      //     data: formData,
+      //     processData: false,
+      //     contentType: false,
+      //     success: function(response) {
+      //         // Add the new avatar to the UI
+      //         addAvatarToUI(response);
+      //         $('#addAvatarModal').modal('hide');
+      //     },
+      //     error: function(error) {
+      //         // Handle error
+      //         console.error('Error adding avatar:', error);
+      //     }
+      // });
+
+      // For now, let's just log and hide the modal
+      console.log('Adding avatar:', formData);
+      $('#addAvatarModal').modal('hide');
     });
 
     // When the delete button is clicked, show the confirmation modal

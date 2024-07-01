@@ -21,15 +21,19 @@
 
                     <div id="avatar-container" class="row">
                         <!-- BEGIN avatars -->
-                        <div class="col-md-3 col-sm-4 col-6 mb-4">
-                            <div class="card avatar-card">
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                            <div class="card h-100">
                                 <img src="{avatars.path}" class="card-img-top" alt="{avatars.name}">
-                                <div class="card-body">
+                                <div class="card-body d-flex flex-column">
                                     <h5 class="card-title">{avatars.name}</h5>
-                                    <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-sm btn-outline-primary rename-avatar" data-id="{avatars.id}">Rename</button>
-                                    <button type="button" class="btn btn-sm btn-outline-danger delete-avatar" data-id="{avatars.id}">Delete</button>
-                                </div>
+                                    <div class="card-text">
+                                        <span class="fw-bold">Access:</span>
+                                        <small class="fst-italic text-muted">{avatars.accessLevel}</small>
+                                    </div>
+                                    <div class="btn-group mt-auto" role="group">
+                                        <button type="button" class="btn btn-sm btn-outline-primary rename-avatar" data-id="{avatars.id}">Rename</button>
+                                        <button type="button" class="btn btn-sm btn-outline-danger delete-avatar" data-id="{avatars.id}">Delete</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -47,19 +51,26 @@
         <div class="modal-content">
             <div class="modal-header d-flex justify-content-between align-items-center">
                 <h5 class="modal-title" id="addAvatarModalLabel">Add New Avatar</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="add-avatar-form">
-                    <div class="form-group">
-                        <label for="avatar-name">Avatar Name</label>
+                    <div class="mb-3">
+                        <label for="avatar-name" class="form-label">Avatar Name</label>
                         <input type="text" class="form-control" id="avatar-name" required>
                     </div>
-                    <div class="form-group">
-                        <label for="avatar-file">Avatar Image</label>
-                        <input type="file" class="form-control-file" id="avatar-file" accept="image/*" required>
+                    <div class="mb-3">
+                        <label for="avatar-file" class="form-label">Avatar Image</label>
+                        <input type="file" class="form-control" id="avatar-file" accept="image/*" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="avatar-access" class="form-label">Access Level</label>
+                        <select class="form-select" id="avatar-access" required>
+                            <option value="users" selected>All Users</option>
+                            <option value="moderators">Moderators & Above</option>
+                            <option value="global_moderators">Global Moderators & Administrators</option>
+                            <option value="administrators">Administrators Only</option>
+                        </select>
                     </div>
                 </form>
             </div>
