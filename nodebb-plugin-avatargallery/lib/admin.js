@@ -4,6 +4,11 @@ define('admin/plugins/avatargallery', ['api'], function (api) {
   var AvatarGallery = {};
   let avatarToDelete;
 
+  function showError(message) {
+    $('#errorMessage').text(message);
+    $('#errorModal').modal('show');
+  }
+
   AvatarGallery.init = function () {
     $('#submit-avatar').on('click', function () {
       var formData = new FormData();
@@ -21,7 +26,7 @@ define('admin/plugins/avatargallery', ['api'], function (api) {
       //   })
       //   .catch((error) => {
       //     // Handle error
-      //     console.error('Error adding avatar:', error);
+      //     showError('Error adding avatar:', error);
       //   });
 
       // For now, let's just log and hide the modal
@@ -70,7 +75,7 @@ define('admin/plugins/avatargallery', ['api'], function (api) {
       //   })
       //   .catch((error) => {
       //     // Handle error
-      //     console.error('Error updating avatar:', error);
+      //     showError('Error updating avatar:', error);
       //   });
 
       // For now, let's just log and hide the modal
@@ -91,7 +96,7 @@ define('admin/plugins/avatargallery', ['api'], function (api) {
         //   })
         //   .catch((error) => {
         //     // Handle error
-        //     console.error('Error deleting avatar:', error);
+        //     showError('Error deleting avatar:', error);
         //   });
 
         // For now, let's just log and hide the modal
