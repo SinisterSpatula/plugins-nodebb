@@ -30,9 +30,9 @@
                                         <span class="fw-bold">Access:</span>
                                         <small class="fst-italic text-muted">{avatars.accessLevel}</small>
                                     </div>
-                                    <div class="btn-group mt-auto" role="group">
-                                        <button type="button" class="btn btn-sm btn-outline-primary edit-avatar" data-id="{avatars.id}">Edit</button>
-                                        <button type="button" class="btn btn-sm btn-outline-danger delete-avatar" data-id="{avatars.id}">Delete</button>
+                                    <div class="d-flex mt-auto w-100">
+                                        <button type="button" class="btn btn-sm btn-outline-primary edit-avatar w-50 me-1" data-id="{avatars.id}">Edit</button>
+                                        <button type="button" class="btn btn-sm btn-outline-danger delete-avatar w-50 ms-1" data-id="{avatars.id}">Delete</button>
                                     </div>
                                 </div>
                             </div>

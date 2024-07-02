@@ -23,6 +23,7 @@ define('admin/plugins/avatargallery', ['api'], function (api) {
       //     // Add the new avatar to the UI
       //     addAvatarToUI(response);
       //     $('#addAvatarModal').modal('hide');
+      //     resetSearch();
       //   })
       //   .catch((error) => {
       //     // Handle error
@@ -41,9 +42,28 @@ define('admin/plugins/avatargallery', ['api'], function (api) {
     });
 
     $('#avatar-search').on('input', function () {
-      // Handle search/filtering
-      console.log('Searching for ' + $(this).val());
+      const searchTerm = $(this).val().toLowerCase();
+      filterAvatars(searchTerm);
     });
+
+    function resetSearch() {
+      $('#avatar-search').val('');
+      $('#avatar-container .col-12').show();
+    }
+
+    function filterAvatars(searchTerm) {
+      $('#avatar-container .col-12').each(function () {
+        const card = $(this);
+        const avatarName = card.find('.card-title').text().toLowerCase();
+        const avatarAccess = card.find('.card-text small').text().toLowerCase();
+
+        if (avatarName.includes(searchTerm) || avatarAccess.includes(searchTerm)) {
+          card.show();
+        } else {
+          card.hide();
+        }
+      });
+    }
 
     // When the edit button is clicked, show the edit modal
     $('#avatar-container').on('click', '.edit-avatar', function () {
@@ -72,6 +92,7 @@ define('admin/plugins/avatargallery', ['api'], function (api) {
       //     card.find('.card-title').text(newName);
       //     card.find('.card-text small').text(newAccess.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()));
       //     $('#editAvatarModal').modal('hide');
+      //     resetSearch();
       //   })
       //   .catch((error) => {
       //     // Handle error
@@ -93,6 +114,7 @@ define('admin/plugins/avatargallery', ['api'], function (api) {
         //     // Remove the avatar from the UI
         //     $('[data-id="' + avatarToDelete + '"]').closest('.col-12').remove();
         //     $('#deleteAvatarModal').modal('hide');
+        //     resetSearch();
         //   })
         //   .catch((error) => {
         //     // Handle error

@@ -76,6 +76,36 @@ Controllers.renderAdminPage = function (req, res) {
         path: '/assets/uploads/profile/uid-1/1-profileavatar-1719727087917.jpeg?1719727087926',
         accessLevel: 'users',
       },
+      {
+        id: 11,
+        name: 'Enchanted Forest',
+        path: '/assets/uploads/profile/uid-1/1-profileavatar-1719727087917.jpeg?1719727087926',
+        accessLevel: 'administrators',
+      },
+      {
+        id: 12,
+        name: 'Celestial Nebula',
+        path: '/assets/uploads/profile/uid-1/1-profileavatar-1719727087917.jpeg?1719727087926',
+        accessLevel: 'administrators',
+      },
+      {
+        id: 13,
+        name: 'Serene Waterfall',
+        path: '/assets/uploads/profile/uid-1/1-profileavatar-1719727087917.jpeg?1719727087926',
+        accessLevel: 'administrators',
+      },
+      {
+        id: 14,
+        name: 'Mystic Moonlight',
+        path: '/assets/uploads/profile/uid-1/1-profileavatar-1719727087917.jpeg?1719727087926',
+        accessLevel: 'administrators',
+      },
+      {
+        id: 15,
+        name: 'Ethereal Sunrise',
+        path: '/assets/uploads/profile/uid-1/1-profileavatar-1719727087917.jpeg?1719727087926',
+        accessLevel: 'administrators',
+      },
     ],
   });
 };
