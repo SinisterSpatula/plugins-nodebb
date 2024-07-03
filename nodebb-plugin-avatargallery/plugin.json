@@ -7,7 +7,8 @@
     { "hook": "filter:uploadImage", "method": "uploadImage" },
     { "hook": "action:plugin.activate", "method": "activate" },
     { "hook": "action:plugin.deactivate", "method": "deactivate" },
-    { "hook": "filter:admin.header.build", "method": "addAdminNavigation" }
+    { "hook": "filter:admin.header.build", "method": "addAdminNavigation" },
+    { "hook": "static:api.routes", "method": "addRoutes" }
   ],
   "staticDirs": {
     "static": "./static"

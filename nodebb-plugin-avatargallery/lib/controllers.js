@@ -1,18 +1,9 @@
 'use strict';
 
+const winston = require.main.require('winston');
 const Controllers = module.exports;
 
 Controllers.renderAdminPage = function (req, res) {
-  /*
-		Make sure the route matches your path to template exactly.
-
-		If your route was:
-			myforum.com/some/complex/route/
-		your template should be:
-			templates/some/complex/route.tpl
-		and you would render it like so:
-			res.render('some/complex/route');
-	*/
   res.render('admin/plugins/avatargallery', {
     title: 'Avatar Gallery',
     avatars: [
@@ -52,60 +43,43 @@ Controllers.renderAdminPage = function (req, res) {
         path: '/assets/uploads/profile/uid-1/1-profileavatar-1719727087917.jpeg?1719727087926',
         accessLevel: 'global_moderators',
       },
-      {
-        id: 7,
-        name: 'Shimmering Aurora',
-        path: '/assets/uploads/profile/uid-1/1-profileavatar-1719727087917.jpeg?1719727087926',
-        accessLevel: 'users',
-      },
-      {
-        id: 8,
-        name: 'Tranquil Beach',
-        path: '/assets/uploads/profile/uid-1/1-profileavatar-1719727087917.jpeg?1719727087926',
-        accessLevel: 'moderators',
-      },
-      {
-        id: 9,
-        name: 'Majestic Mountain',
-        path: '/assets/uploads/profile/uid-1/1-profileavatar-1719727087917.jpeg?1719727087926',
-        accessLevel: 'global_moderators',
-      },
-      {
-        id: 10,
-        name: 'Whimsical Butterfly',
-        path: '/assets/uploads/profile/uid-1/1-profileavatar-1719727087917.jpeg?1719727087926',
-        accessLevel: 'users',
-      },
-      {
-        id: 11,
-        name: 'Enchanted Forest',
-        path: '/assets/uploads/profile/uid-1/1-profileavatar-1719727087917.jpeg?1719727087926',
-        accessLevel: 'administrators',
-      },
-      {
-        id: 12,
-        name: 'Celestial Nebula',
-        path: '/assets/uploads/profile/uid-1/1-profileavatar-1719727087917.jpeg?1719727087926',
-        accessLevel: 'administrators',
-      },
-      {
-        id: 13,
-        name: 'Serene Waterfall',
-        path: '/assets/uploads/profile/uid-1/1-profileavatar-1719727087917.jpeg?1719727087926',
-        accessLevel: 'administrators',
-      },
-      {
-        id: 14,
-        name: 'Mystic Moonlight',
-        path: '/assets/uploads/profile/uid-1/1-profileavatar-1719727087917.jpeg?1719727087926',
-        accessLevel: 'administrators',
-      },
-      {
-        id: 15,
-        name: 'Ethereal Sunrise',
-        path: '/assets/uploads/profile/uid-1/1-profileavatar-1719727087917.jpeg?1719727087926',
-        accessLevel: 'administrators',
-      },
     ],
   });
+};
+
+Controllers.addAvatar = async function (req, res) {
+  winston.info('[plugins/avatargallery] addAvatar called');
+  try {
+    // Implementation for adding an avatar
+    // Access form data via req.body
+    // Handle file upload
+    // Save to database
+    res.json({ success: true, message: 'Avatar added successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+Controllers.editAvatar = async function (req, res) {
+  winston.info('[plugins/avatargallery] editAvatar called');
+  try {
+    // Implementation for editing an avatar
+    // Access data via req.body
+    // Update in database
+    res.json({ success: true, message: 'Avatar updated successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+Controllers.deleteAvatar = async function (req, res) {
+  winston.info('[plugins/avatargallery] deleteAvatar called');
+  try {
+    // Implementation for deleting an avatar
+    // Access avatar ID via req.params.id
+    // Delete from database
+    res.json({ success: true, message: 'Avatar deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
