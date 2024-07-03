@@ -3,10 +3,24 @@
 define('admin/plugins/avatargallery', ['api'], function (api) {
   var AvatarGallery = {};
   let avatarToDelete;
+  let previousModal = null;
 
   function showError(message) {
+    // Store the currently open modal
+    previousModal = $('.modal:visible').attr('id');
+    // hide any visible modals first.
+    $('#errorModal').modal('hide');
+    $('#addAvatarModal').modal('hide');
+    $('#editAvatarModal').modal('hide');
+    $('#deleteAvatarModal').modal('hide');
     $('#errorMessage').text(message);
     $('#errorModal').modal('show');
+    $('#errorModal').on('hidden.bs.modal', function () {
+      if (previousModal) {
+        $(`#${previousModal}`).modal('show');
+        previousModal = null;
+      }
+    });
   }
 
   AvatarGallery.init = function () {
@@ -16,8 +30,25 @@ define('admin/plugins/avatargallery', ['api'], function (api) {
       formData.append('file', $('#avatar-file')[0].files[0]);
       formData.append('accessLevel', $('#avatar-access').val());
 
+      if (formData.get('name') == '') {
+        showError('Please enter a name for the avatar');
+        return;
+      }
+      if (formData.get('file') == 'undefined') {
+        showError('Please select an image to upload');
+        return;
+      }
+      if (
+        formData.get('accessLevel') !== 'users' &&
+        formData.get('accessLevel') !== 'moderators' &&
+        formData.get('accessLevel') !== 'global_moderators' &&
+        formData.get('accessLevel') !== 'administrators'
+      ) {
+        showError('Please select an access level for the avatar');
+        return;
+      }
       // Add your AJAX call here to submit the new avatar to your backend
-      console.log('Adding avatar:', formData);
+      console.log('Adding avatar:', 'name:', formData.get('name'), 'file:', formData.get('file'), 'accessLevel:', formData.get('accessLevel'));
       api
         .post('/plugins/avatargallery/add', formData)
         .then((response) => {
