@@ -9,20 +9,27 @@ const routeHelpers = require.main.require('./src/routes/helpers');
 const plugin = {};
 
 plugin.init = async (params) => {
-  const { router, middleware } = params;
+  const { router /* , middleware , controllers */ } = params;
   try {
     // Disable avatar uploads
     await meta.configs.set('allowProfileImageUploads', 0);
 
-    // Set up the admin page route
-    routeHelpers.setupAdminPageRoute(router, '/admin/plugins/avatargallery', controllers.renderAdminPage);
+    routeHelpers.setupPageRoute(
+      router,
+      '/avatargallery',
+      [
+        (req, res, next) => {
+          winston.info(`[plugins/avatargallery] In middleware. This argument can be either a single middleware or an array of middlewares`);
+          setImmediate(next);
+        },
+      ],
+      (req, res) => {
+        winston.info(`[plugins/avatargallery] Navigated to ${nconf.get('relative_path')}/avatargallery`);
+        res.render('avatargallery', { uid: req.uid });
+      }
+    );
 
-    // Set up the API routes
-    const apiMiddleware = [middleware.authenticateRequest, middleware.ensureLoggedIn, middleware.admin.checkPrivileges];
-    winston.info('[plugins/avatargallery] Setting up API routes');
-    routeHelpers.setupApiRoute(router, 'post', '/avatargallery/add', apiMiddleware, controllers.addAvatar);
-    routeHelpers.setupApiRoute(router, 'put', '/avatargallery/edit', apiMiddleware, controllers.editAvatar);
-    routeHelpers.setupApiRoute(router, 'delete', '/avatargallery/delete', apiMiddleware, controllers.deleteAvatar);
+    routeHelpers.setupAdminPageRoute(router, '/admin/plugins/avatargallery', controllers.renderAdminPage);
 
     winston.info('[plugins/avatargallery] plugin initialized and avatar uploads disabled');
   } catch (err) {
@@ -61,13 +68,28 @@ plugin.uploadImage = function (data) {
   return data;
 };
 
-plugin.addAdminNavigation = function (header, callback) {
+plugin.addRoutes = async ({ router, middleware, helpers }) => {
+  const middlewares = [
+    middleware.ensureLoggedIn,
+    // middleware.admin.checkPrivileges
+  ];
+  // Set up the API routes
+  routeHelpers.setupApiRoute(router, 'post', '/avatargallery/add', middlewares, (req, res) => {
+    helpers.formatApiResponse(200, res, {
+      foobar: req.params.param1,
+    });
+  });
+  routeHelpers.setupApiRoute(router, 'put', '/avatargallery/edit', controllers.editAvatar);
+  routeHelpers.setupApiRoute(router, 'delete', '/avatargallery/delete', controllers.deleteAvatar);
+};
+
+plugin.addAdminNavigation = (header) => {
   header.plugins.push({
     route: '/plugins/avatargallery',
     icon: 'fa-picture-o',
     name: 'Avatar Gallery',
   });
-  callback(null, header);
+  return header;
 };
 
 module.exports = plugin;
