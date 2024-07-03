@@ -74,13 +74,13 @@ plugin.addRoutes = async ({ router, middleware, helpers }) => {
     // middleware.admin.checkPrivileges
   ];
   // Set up the API routes
-  routeHelpers.setupApiRoute(router, 'post', '/avatargallery/add', (req, res) => {
+  routeHelpers.setupApiRoute(router, 'post', '/avatargallery/add', middlewares, (req, res) => {
     helpers.formatApiResponse(200, res, {
       foobar: req.params.param1,
     });
   });
-  routeHelpers.setupApiRoute(router, 'put', '/avatargallery/edit', controllers.editAvatar);
-  routeHelpers.setupApiRoute(router, 'delete', '/avatargallery/delete', controllers.deleteAvatar);
+  routeHelpers.setupApiRoute(router, 'put', '/avatargallery/edit', middlewares, controllers.editAvatar);
+  routeHelpers.setupApiRoute(router, 'delete', '/avatargallery/delete', middlewares, controllers.deleteAvatar);
 };
 
 plugin.addAdminNavigation = (header) => {
