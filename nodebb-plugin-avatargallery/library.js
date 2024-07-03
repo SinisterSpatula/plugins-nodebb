@@ -74,7 +74,7 @@ plugin.addRoutes = async ({ router, middleware, helpers }) => {
     // middleware.admin.checkPrivileges
   ];
   // Set up the API routes
-  routeHelpers.setupApiRoute(router, 'post', '/avatargallery/add', middlewares, (req, res) => {
+  routeHelpers.setupApiRoute(router, 'post', '/avatargallery/add', (req, res) => {
     helpers.formatApiResponse(200, res, {
       foobar: req.params.param1,
     });
