@@ -17,6 +17,13 @@ plugin.init = async (params) => {
     // Set up the admin page route
     routeHelpers.setupAdminPageRoute(router, '/admin/plugins/avatargallery', controllers.renderAdminPage);
 
+    // Set up the API routes
+    const apiMiddleware = [middleware.authenticateRequest, middleware.ensureLoggedIn, middleware.admin.checkPrivileges];
+    winston.info('[plugins/avatargallery] Setting up API routes');
+    routeHelpers.setupApiRoute(router, 'post', '/avatargallery/add', apiMiddleware, controllers.addAvatar);
+    routeHelpers.setupApiRoute(router, 'put', '/avatargallery/edit', apiMiddleware, controllers.editAvatar);
+    routeHelpers.setupApiRoute(router, 'delete', '/avatargallery/delete', apiMiddleware, controllers.deleteAvatar);
+
     winston.info('[plugins/avatargallery] plugin initialized and avatar uploads disabled');
   } catch (err) {
     winston.warn('[plugins/avatargallery] Error initializing plugin:', err);
@@ -61,14 +68,6 @@ plugin.addAdminNavigation = function (header, callback) {
     name: 'Avatar Gallery',
   });
   callback(null, header);
-};
-
-plugin.addRoutes = async ({ router, middleware, helpers }) => {
-  const apiMiddleware = [middleware.authenticateRequest, middleware.ensureLoggedIn, middleware.admin.checkPrivileges];
-  winston.info('[plugins/avatargallery] Setting up API routes');
-  routeHelpers.setupApiRoute(router, 'post', '/avatargallery/add', apiMiddleware, controllers.addAvatar);
-  routeHelpers.setupApiRoute(router, 'put', '/avatargallery/edit', apiMiddleware, controllers.editAvatar);
-  routeHelpers.setupApiRoute(router, 'delete', '/avatargallery/delete', apiMiddleware, controllers.deleteAvatar);
 };
 
 module.exports = plugin;
