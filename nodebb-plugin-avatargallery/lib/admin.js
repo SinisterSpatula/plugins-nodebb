@@ -22,13 +22,13 @@ define('admin/plugins/avatargallery', ['api'], function (api) {
         .post('/plugins/avatargallery/add', formData)
         .then((response) => {
           // Add the new avatar to the UI
-          addAvatarToUI(response);
           $('#addAvatarModal').modal('hide');
           resetSearch();
         })
         .catch((error) => {
           // Handle error
-          showError('Error adding avatar:', error);
+          showError('Error adding avatar:', error.message);
+          console.log(error);
         });
     });
 
@@ -94,7 +94,7 @@ define('admin/plugins/avatargallery', ['api'], function (api) {
         })
         .catch((error) => {
           // Handle error
-          showError('Error updating avatar:', error);
+          showError('Error updating avatar:', error.message);
         });
     });
 
@@ -115,7 +115,7 @@ define('admin/plugins/avatargallery', ['api'], function (api) {
           })
           .catch((error) => {
             // Handle error
-            showError('Error deleting avatar:', error);
+            showError('Error deleting avatar:', error.message);
           });
       }
     });
