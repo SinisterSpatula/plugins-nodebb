@@ -111,6 +111,18 @@ define('admin/plugins/avatargallery', ['api'], function (api) {
       var newName = $('#edit-avatar-name').val();
       var newAccess = $('#edit-avatar-access').val();
 
+      if (avatarId == '' || avatarId == 'undefined' || avatarId == 'null') {
+        showError('Please select an avatar to edit');
+        return;
+      }
+      if (newName == '' || newName == 'undefined' || newName == 'null') {
+        showError('Please enter a name for the avatar');
+        return;
+      }
+      if (newAccess !== 'users' && newAccess !== 'moderators' && newAccess !== 'global_moderators' && newAccess !== 'administrators') {
+        showError('Please select an access level for the avatar');
+        return;
+      }
       // Add your AJAX call here to submit the updated avatar info to your backend
       console.log('Updating avatar:', { id: avatarId, name: newName, accessLevel: newAccess });
       api
