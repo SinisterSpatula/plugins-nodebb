@@ -19,7 +19,7 @@ define('admin/plugins/avatargallery', ['api'], function (api) {
       // Add your AJAX call here to submit the new avatar to your backend
       console.log('Adding avatar:', formData);
       api
-        .post('/avatargallery/add', formData)
+        .post('/plugins/avatargallery/add', formData)
         .then((response) => {
           // Add the new avatar to the UI
           addAvatarToUI(response);
@@ -83,7 +83,7 @@ define('admin/plugins/avatargallery', ['api'], function (api) {
       // Add your AJAX call here to submit the updated avatar info to your backend
       console.log('Updating avatar:', { id: avatarId, name: newName, accessLevel: newAccess });
       api
-        .put('/avatargallery/edit', { id: avatarId, name: newName, accessLevel: newAccess })
+        .put('/plugins/avatargallery/edit', { id: avatarId, name: newName, accessLevel: newAccess })
         .then((response) => {
           // Update UI
           var card = $('[data-id="' + avatarId + '"]').closest('.card');
@@ -104,7 +104,7 @@ define('admin/plugins/avatargallery', ['api'], function (api) {
         // Add your AJAX call here to delete the avatar
         console.log('Deleting avatar with ID:', avatarToDelete);
         api
-          .del('/avatargallery/delete', { id: avatarToDelete })
+          .del('/plugins/avatargallery/delete', { id: avatarToDelete })
           .then((response) => {
             // Remove the avatar from the UI
             $('[data-id="' + avatarToDelete + '"]')

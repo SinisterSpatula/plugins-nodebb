@@ -74,6 +74,7 @@ plugin.addRoutes = async ({ router, middleware, helpers }) => {
     // middleware.admin.checkPrivileges
   ];
   // Set up the API routes
+  winston.info('[plugins/avatargallery] addRoutes called');
   routeHelpers.setupApiRoute(router, 'post', '/avatargallery/add', middlewares, (req, res) => {
     helpers.formatApiResponse(200, res, {
       foobar: req.params.param1,
