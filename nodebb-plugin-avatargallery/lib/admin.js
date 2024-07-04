@@ -1,5 +1,8 @@
 'use strict';
 
+const { head } = require('../../../src/request');
+const uploader = require('uploader');
+
 define('admin/plugins/avatargallery', ['api'], function (api) {
   var AvatarGallery = {};
   let avatarToDelete;
@@ -25,39 +28,40 @@ define('admin/plugins/avatargallery', ['api'], function (api) {
 
   AvatarGallery.init = function () {
     $('#submit-avatar').on('click', function () {
-      const payload = {
+      var avatarData = {
         name: $('#avatar-name').val(),
-        file: $('#avatar-file')[0].files[0],
         accessLevel: $('#avatar-access').val(),
+        file: $('#avatar-file').val(),
       };
 
-      if (!payload.name) {
+      if (avatarData.name === '') {
         showError('Please enter a name for the avatar');
         return;
       }
-      if (!payload.file) {
+      if (!avatarData.file) {
         showError('Please select an image to upload');
         return;
       }
-      if (!['users', 'moderators', 'global_moderators', 'administrators'].includes(payload.accessLevel)) {
+      if (
+        avatarData.accessLevel !== 'users' &&
+        avatarData.accessLevel !== 'moderators' &&
+        avatarData.accessLevel !== 'global_moderators' &&
+        avatarData.accessLevel !== 'administrators'
+      ) {
         showError('Please select an access level for the avatar');
         return;
       }
-      $.ajax({
-        url: '/plugins/avatargallery/add',
-        type: 'POST',
-        data: payload,
-        success: function(response) {
-          // Add the new avatar to the UI
+
+      api.post('/plugins/avatargallery/add', avatarData, function (err, response) {
+        if (err) {
+          console.error('Error:', err);
+        } else {
           $('#addAvatarModal').modal('hide');
           resetSearch();
-        },
-        error: function(error) {
-          // Handle error
-          showError('Error adding avatar:', error.responseText);
-          console.log(error);
         }
       });
+    });
+
     // When the delete button is clicked, show the confirmation modal
     $('#avatar-container').on('click', '.delete-avatar', function () {
       avatarToDelete = $(this).data('id');
