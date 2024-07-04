@@ -43,22 +43,21 @@ define('admin/plugins/avatargallery', ['api'], function (api) {
         showError('Please select an access level for the avatar');
         return;
       }
-      // Add your AJAX call here to submit the new avatar to your backend
-      console.log('Adding avatar:', 'name:', payload.name, 'file:', payload.file, 'accessLevel:', payload.accessLevel);
-      api
-        .post('/plugins/avatargallery/add', payload)
-        .then((response) => {
+      $.ajax({
+        url: '/plugins/avatargallery/add',
+        type: 'POST',
+        data: payload,
+        success: function(response) {
           // Add the new avatar to the UI
           $('#addAvatarModal').modal('hide');
           resetSearch();
-        })
-        .catch((error) => {
+        },
+        error: function(error) {
           // Handle error
-          showError('Error adding avatar:', error.message);
+          showError('Error adding avatar:', error.responseText);
           console.log(error);
-        });
-    });
-
+        }
+      });
     // When the delete button is clicked, show the confirmation modal
     $('#avatar-container').on('click', '.delete-avatar', function () {
       avatarToDelete = $(this).data('id');
