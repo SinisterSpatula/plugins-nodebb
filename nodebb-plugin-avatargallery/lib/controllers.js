@@ -48,7 +48,12 @@ Controllers.renderAdminPage = function (req, res) {
 };
 
 Controllers.addAvatar = async function (req, res) {
+  // pull out the Name, File and accessLevel from body
+  let { name, file, accessLevel } = req.body;
   winston.info('[plugins/avatargallery] addAvatar called');
+  winston.info('[plugins/avatargallery] Name:', name);
+  winston.info('[plugins/avatargallery] File:', file);
+  winston.info('[plugins/avatargallery] AccessLevel:', accessLevel);
   try {
     // Implementation for adding an avatar
     // Access form data via req.body
@@ -62,6 +67,7 @@ Controllers.addAvatar = async function (req, res) {
 
 Controllers.editAvatar = async function (req, res) {
   winston.info('[plugins/avatargallery] editAvatar called');
+  winston.info('[plugins/avatargallery] req.body:', JSON.stringify(req.body));
   try {
     // Implementation for editing an avatar
     // Access data via req.body
@@ -74,6 +80,7 @@ Controllers.editAvatar = async function (req, res) {
 
 Controllers.deleteAvatar = async function (req, res) {
   winston.info('[plugins/avatargallery] deleteAvatar called');
+  winston.info('[plugins/avatargallery] req.body:', JSON.stringify(req.body));
   try {
     // Implementation for deleting an avatar
     // Access avatar ID via req.params.id

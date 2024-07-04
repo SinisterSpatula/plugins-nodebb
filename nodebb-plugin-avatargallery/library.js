@@ -69,12 +69,10 @@ plugin.uploadImage = function (data) {
 };
 
 plugin.addRoutes = async ({ router, middleware, helpers }) => {
-  const middlewares = [
-    middleware.ensureLoggedIn,
-    // middleware.admin.checkPrivileges
-  ];
+  const middlewares = [middleware.ensureLoggedIn, middleware.admin.checkPrivileges];
   // Set up the API routes
   winston.info('[plugins/avatargallery] addRoutes called');
+
   routeHelpers.setupApiRoute(router, 'post', '/avatargallery/add', middlewares, controllers.addAvatar);
   routeHelpers.setupApiRoute(router, 'put', '/avatargallery/edit', middlewares, controllers.editAvatar);
   routeHelpers.setupApiRoute(router, 'delete', '/avatargallery/delete', middlewares, controllers.deleteAvatar);

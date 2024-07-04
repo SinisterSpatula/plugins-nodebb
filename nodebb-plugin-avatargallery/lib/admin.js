@@ -25,32 +25,28 @@ define('admin/plugins/avatargallery', ['api'], function (api) {
 
   AvatarGallery.init = function () {
     $('#submit-avatar').on('click', function () {
-      var formData = new FormData();
-      formData.append('name', $('#avatar-name').val());
-      formData.append('file', $('#avatar-file')[0].files[0]);
-      formData.append('accessLevel', $('#avatar-access').val());
+      const payload = {
+        name: $('#avatar-name').val(),
+        file: $('#avatar-file')[0].files[0],
+        accessLevel: $('#avatar-access').val(),
+      };
 
-      if (formData.get('name') == '') {
+      if (!payload.name) {
         showError('Please enter a name for the avatar');
         return;
       }
-      if (formData.get('file') == 'undefined') {
+      if (!payload.file) {
         showError('Please select an image to upload');
         return;
       }
-      if (
-        formData.get('accessLevel') !== 'users' &&
-        formData.get('accessLevel') !== 'moderators' &&
-        formData.get('accessLevel') !== 'global_moderators' &&
-        formData.get('accessLevel') !== 'administrators'
-      ) {
+      if (!['users', 'moderators', 'global_moderators', 'administrators'].includes(payload.accessLevel)) {
         showError('Please select an access level for the avatar');
         return;
       }
       // Add your AJAX call here to submit the new avatar to your backend
-      console.log('Adding avatar:', 'name:', formData.get('name'), 'file:', formData.get('file'), 'accessLevel:', formData.get('accessLevel'));
+      console.log('Adding avatar:', 'name:', payload.name, 'file:', payload.file, 'accessLevel:', payload.accessLevel);
       api
-        .post('/plugins/avatargallery/add', formData)
+        .post('/plugins/avatargallery/add', payload)
         .then((response) => {
           // Add the new avatar to the UI
           $('#addAvatarModal').modal('hide');
