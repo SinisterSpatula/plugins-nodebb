@@ -117,3 +117,4 @@
         </div>
     </div>
 </div>
+<!-- The add avatar modal is located in avatargallery/templates/admin/plugins/addavatar_modal.tpl -->
