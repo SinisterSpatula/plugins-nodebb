@@ -28,38 +28,48 @@ define('admin/plugins/avatargallery', ['api', 'pictureCropper'], function (api, 
   }
 
   AvatarGallery.init = function () {
-    // Step 1: Upload and Crop Image
-    $('#avatar-file').on('change', function (e) {
-      const file = e.target.files[0];
+    $('#add-avatar').on('click', function () {
       pictureCropper.show(
         {
-          title: 'Crop Avatar',
+          title: 'Add New Avatar',
           socketMethod: 'plugins.avatargallery.uploadAvatar',
           aspectRatio: 1,
           allowSkippingCrop: false,
           restrictImageDimension: true,
-          imageDimension: 256, // or whatever size you prefer
+          imageDimension: 256,
           paramName: 'avatar',
-          fileSize: 2048, // 2MB limit, adjust as needed
+          fileSize: 2048,
         },
         function (imageUrl) {
-          // Handle the cropped image URL
-          $('#cropped-image').attr('src', imageUrl);
-          $('.step-1').addClass('d-none');
-          $('.step-3').removeClass('d-none');
+          showAvatarDetailsModal(imageUrl);
         }
       );
     });
 
-    // Step 2: Save Avatar
-    $('#save-avatar').on('click', function () {
-      const avatarName = $('#avatar-name').val();
-      const accessLevel = $('#avatar-access').val();
-      const imageUrl = $('#cropped-image').attr('src');
+    function showAvatarDetailsModal(imageUrl) {
+      app.parseAndTranslate('plugins/avatargallery/partials/avatar_details', {}, function (html) {
+        const modal = bootbox.dialog({
+          title: 'Avatar Details',
+          message: html,
+          buttons: {
+            save: {
+              label: 'Save Avatar',
+              className: 'btn-primary',
+              callback: function () {
+                saveAvatar(imageUrl, modal);
+              },
+            },
+          },
+        });
+      });
+    }
 
-      if (!avatarName || !imageUrl) {
-        showError('Please enter a name for the avatar and crop an image');
-        return;
+    function saveAvatar(imageUrl, modal) {
+      const avatarName = modal.find('#avatar-name').val();
+      const accessLevel = modal.find('#avatar-access').val();
+
+      if (!avatarName) {
+        return showError('Please enter a name for the avatar');
       }
 
       api.post(
@@ -73,29 +83,12 @@ define('admin/plugins/avatargallery', ['api', 'pictureCropper'], function (api, 
           if (err) {
             showError('Error saving avatar: ' + err.message);
           } else {
-            $('#addAvatarModal').modal('hide');
-            resetAddAvatarModal();
+            modal.modal('hide');
             refreshAvatarList();
           }
         }
       );
-    });
-
-    function resetAddAvatarModal() {
-      $('.step-1').removeClass('d-none');
-      $('.step-2, .step-3').addClass('d-none');
-      $('#avatar-file').val('');
-      $('#avatar-name').val('');
-      $('#avatar-access').val('users');
-      if (cropper) {
-        cropper.destroy();
-      }
-      croppedImageBlob = null;
     }
-
-    $('#addAvatarModal').on('hidden.bs.modal', function () {
-      resetAddAvatarModal();
-    });
 
     function refreshAvatarList() {
       api
