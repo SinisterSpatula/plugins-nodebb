@@ -28,48 +28,58 @@ define('admin/plugins/avatargallery', ['api', 'pictureCropper'], function (api, 
 
   AvatarGallery.init = async function () {
     $('#add-avatar').on('click', function () {
-      pictureCropper.show(
-        {
-          route: config.relative_path + '/api/admin/upload/file',
-          params: { folder: 'avatars' },
-          title: 'Upload Avatar',
-          socketMethod: 'plugins.avatargallery.uploadAvatar',
-          aspectRatio: 1,
-          allowSkippingCrop: false,
-          restrictImageDimension: true,
-          imageDimension: 256,
-          paramName: 'avatar',
-        },
-        function (imageUrl) {
-          showAvatarDetailsModal(imageUrl);
-        }
-      );
-    });
-
-    function showAvatarDetailsModal(imageUrl) {
-      app.parseAndTranslate('plugins/avatargallery/partials/avatar_details', {}, function (html) {
-        const modal = bootbox.dialog({
-          title: 'Avatar Details',
+      app.parseAndTranslate('plugins/avatargallery/partials/upload_modal', {}, function (html) {
+        var modal = bootbox.dialog({
+          title: 'Add New Avatar',
           message: html,
+          size: 'large',
           buttons: {
             save: {
               label: 'Save Avatar',
               className: 'btn-primary',
-              callback: function () {
-                saveAvatar(imageUrl, modal);
-              },
+              callback: saveAvatar,
             },
           },
         });
+
+        var imagePreview = modal.find('#avatar-preview');
+        var fileInput = modal.find('#avatar-file-input');
+
+        fileInput.on('change', function (e) {
+          var file = e.target.files[0];
+          if (file) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              pictureCropper.show(
+                {
+                  title: 'Crop Avatar',
+                  socketMethod: 'plugins.avatargallery.uploadAvatar',
+                  aspectRatio: 1,
+                  allowSkippingCrop: false,
+                  restrictImageDimension: true,
+                  imageDimension: 256,
+                  paramName: 'avatar',
+                  imageData: e.target.result,
+                },
+                function (imageData) {
+                  imagePreview.attr('src', imageData);
+                }
+              );
+            };
+            reader.readAsDataURL(file);
+          }
+        });
       });
-    }
+    });
 
-    function saveAvatar(imageUrl, modal) {
-      const avatarName = modal.find('#avatar-name').val();
-      const accessLevel = modal.find('#avatar-access').val();
+    function saveAvatar() {
+      var modal = $(this).closest('.modal');
+      var avatarName = modal.find('#avatar-name').val();
+      var accessLevel = modal.find('#avatar-access').val();
+      var imageData = modal.find('#avatar-preview').attr('src');
 
-      if (!avatarName) {
-        return showError('Please enter a name for the avatar');
+      if (!avatarName || !accessLevel || !imageData) {
+        return app.alertError('Please fill all fields and crop an image');
       }
 
       api.post(
@@ -77,15 +87,14 @@ define('admin/plugins/avatargallery', ['api', 'pictureCropper'], function (api, 
         {
           name: avatarName,
           accessLevel: accessLevel,
-          imageData: imageUrl,
+          imageData: imageData,
         },
         function (err, response) {
           if (err) {
-            showError('Error saving avatar: ' + err.message);
-          } else {
-            modal.modal('hide');
-            refreshAvatarList();
+            return app.alertError(err.message);
           }
+          modal.modal('hide');
+          refreshAvatarList();
         }
       );
     }
