@@ -14,6 +14,7 @@
     "static": "./static"
   },
   "scss": ["public/scss/avatargallery.scss"],
+  "acpScss": ["public/scss/admin.scss"],
   "modules": {
     "../admin/plugins/avatargallery.js": "./lib/admin.js"
   },
