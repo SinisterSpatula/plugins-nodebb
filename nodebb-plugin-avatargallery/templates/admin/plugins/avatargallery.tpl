@@ -64,38 +64,40 @@
 </div>
 
 
-<!-- Add Avatar Modal -->
 <div class="modal fade" id="addAvatarModal" tabindex="-1" role="dialog" aria-labelledby="addAvatarModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header d-flex justify-content-between align-items-center">
+            <div class="modal-header">
                 <h5 class="modal-title" id="addAvatarModalLabel">Add New Avatar</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="add-avatar-form">
-                    <div class="mb-3">
-                        <label for="avatar-name" class="form-label">Avatar Name</label>
-                        <input type="text" class="form-control" id="avatar-name" required>
+                <div class="step-1">
+                    <h6>Step 1: Upload Image</h6>
+                    <input type="file" class="form-control" id="avatar-file" accept="image/*" required>
+                    <button class="btn btn-primary mt-3" id="upload-avatar">Upload</button>
+                </div>
+                <div class="step-2 d-none">
+                    <h6>Step 2: Crop Image</h6>
+                    <div class="cropper">
+                        <img id="cropped-image" class="mw-100" crossorigin="anonymous" src="" alt="">
                     </div>
-                    <div class="mb-3">
-                        <label for="avatar-file" class="form-label">Avatar Image</label>
-                        <input type="file" class="form-control" id="avatar-file" accept="image/*" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="avatar-access" class="form-label">Access Level</label>
-                        <select class="form-select" id="avatar-access" required>
-                            <option value="users" selected>All Users</option>
-                            <option value="moderators">Moderators & Above</option>
-                            <option value="global_moderators">Global Moderators & Administrators</option>
-                            <option value="administrators">Administrators Only</option>
-                        </select>
-                    </div>
-                </form>
+                    <button class="btn btn-primary mt-3" id="crop-avatar">Crop</button>
+                </div>
+                <div class="step-3 d-none">
+                    <h6>Step 3: Set Details</h6>
+                    <input type="text" class="form-control mb-3" id="avatar-name" placeholder="Avatar Name" required>
+                    <select class="form-select" id="avatar-access" required>
+                        <option value="users">All Users</option>
+                        <option value="moderators">Moderators & Above</option>
+                        <option value="global_moderators">Global Moderators & Administrators</option>
+                        <option value="administrators">Administrators Only</option>
+                    </select>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="submit-avatar">Add Avatar</button>
+                <button type="button" class="btn btn-primary" id="save-avatar">Save Avatar</button>
             </div>
         </div>
     </div>

@@ -51,9 +51,9 @@ Controllers.addAvatar = async function (req, res) {
   // pull out the Name, File and accessLevel from body
   let { name, file, accessLevel } = req.body;
   winston.info('[plugins/avatargallery] addAvatar called');
-  winston.info('[plugins/avatargallery] Name:', name);
-  winston.info('[plugins/avatargallery] File:', file);
-  winston.info('[plugins/avatargallery] AccessLevel:', accessLevel);
+  winston.info(`[plugins/avatargallery] Name: ${name}`);
+  winston.info(`[plugins/avatargallery] File: ${JSON.stringify(file)}`);
+  winston.info(`[plugins/avatargallery] AccessLevel: ${accessLevel}`);
   try {
     // Implementation for adding an avatar
     // Access form data via req.body

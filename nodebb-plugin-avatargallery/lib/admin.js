@@ -3,10 +3,12 @@
 const { head } = require('../../../src/request');
 const uploader = require('uploader');
 
-define('admin/plugins/avatargallery', ['api'], function (api) {
+define('admin/plugins/avatargallery', ['api', 'cropper'], function (api, Cropper) {
   var AvatarGallery = {};
   let avatarToDelete;
   let previousModal = null;
+  let cropper;
+  let tempImagePath;
 
   function showError(message) {
     // Store the currently open modal
@@ -27,40 +29,122 @@ define('admin/plugins/avatargallery', ['api'], function (api) {
   }
 
   AvatarGallery.init = function () {
-    $('#submit-avatar').on('click', function () {
+    // Step 1: Upload Image
+    $('#upload-avatar').on('click', function () {
+      var formData = new FormData();
+      formData.append('avatar', $('#avatar-file')[0].files[0]);
+
+      api.post('/plugins/avatargallery/upload-temp', formData, function (err, response) {
+        if (err) {
+          showError('Error uploading image: ' + err.message);
+        } else {
+          tempImagePath = response.path;
+          $('.step-1').addClass('d-none');
+          $('.step-2').removeClass('d-none');
+          $('#cropped-image').attr('src', tempImagePath);
+          initCropper();
+        }
+      });
+    });
+
+    // Step 2: Crop Image
+    function initCropper() {
+      cropper = new Cropper($('#cropped-image')[0], {
+        aspectRatio: 1,
+        viewMode: 1,
+      });
+    }
+
+    $('#crop-avatar').on('click', function () {
+      var croppedCanvas = cropper.getCroppedCanvas();
+      croppedCanvas.toBlob(function (blob) {
+        var formData = new FormData();
+        formData.append('croppedAvatar', blob);
+
+        api.post('/plugins/avatargallery/crop-temp', formData, function (err, response) {
+          if (err) {
+            showError('Error cropping image: ' + err.message);
+          } else {
+            tempImagePath = response.path;
+            $('.step-2').addClass('d-none');
+            $('.step-3').removeClass('d-none');
+          }
+        });
+      });
+    });
+
+    // Step 3: Save Avatar
+    $('#save-avatar').on('click', function () {
       var avatarData = {
         name: $('#avatar-name').val(),
         accessLevel: $('#avatar-access').val(),
-        file: $('#avatar-file').val(),
+        tempPath: tempImagePath,
       };
 
       if (avatarData.name === '') {
         showError('Please enter a name for the avatar');
         return;
       }
-      if (!avatarData.file) {
-        showError('Please select an image to upload');
-        return;
-      }
-      if (
-        avatarData.accessLevel !== 'users' &&
-        avatarData.accessLevel !== 'moderators' &&
-        avatarData.accessLevel !== 'global_moderators' &&
-        avatarData.accessLevel !== 'administrators'
-      ) {
-        showError('Please select an access level for the avatar');
-        return;
-      }
 
       api.post('/plugins/avatargallery/add', avatarData, function (err, response) {
         if (err) {
-          console.error('Error:', err);
+          showError('Error saving avatar: ' + err.message);
         } else {
           $('#addAvatarModal').modal('hide');
-          resetSearch();
+          resetAddAvatarModal();
+          refreshAvatarList();
         }
       });
     });
+
+    function resetAddAvatarModal() {
+      $('.step-1').removeClass('d-none');
+      $('.step-2, .step-3').addClass('d-none');
+      $('#avatar-file').val('');
+      $('#avatar-name').val('');
+      $('#avatar-access').val('users');
+      if (cropper) {
+        cropper.destroy();
+      }
+      tempImagePath = null;
+    }
+
+    $('#addAvatarModal').on('hidden.bs.modal', function () {
+      resetAddAvatarModal();
+    });
+
+    function refreshAvatarList() {
+      api
+        .get('/plugins/avatargallery/list', {})
+        .then((avatars) => {
+          const container = $('#avatar-container');
+          container.empty();
+          avatars.forEach((avatar) => {
+            const avatarHtml = `
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+              <div class="card h-100">
+                <img src="${avatar.path}" class="card-img-top" alt="${avatar.name}">
+                <div class="card-body d-flex flex-column">
+                  <h5 class="card-title">${avatar.name}</h5>
+                  <div class="card-text">
+                    <span class="fw-bold">Access:</span>
+                    <small class="fst-italic text-muted">${avatar.accessLevel}</small>
+                  </div>
+                  <div class="d-flex mt-auto w-100">
+                    <button type="button" class="btn btn-sm btn-outline-primary edit-avatar w-50 me-1" data-id="${avatar.id}">Edit</button>
+                    <button type="button" class="btn btn-sm btn-outline-danger delete-avatar w-50 ms-1" data-id="${avatar.id}">Delete</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+            container.append(avatarHtml);
+          });
+        })
+        .catch((error) => {
+          showError('Error refreshing avatar list: ' + error.message);
+        });
+    }
 
     // When the delete button is clicked, show the confirmation modal
     $('#avatar-container').on('click', '.delete-avatar', function () {
