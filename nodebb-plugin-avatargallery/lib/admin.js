@@ -27,33 +27,23 @@ define('admin/plugins/avatargallery', ['api', 'pictureCropper'], function (api, 
   }
 
   AvatarGallery.init = async function () {
-    const Cropper = (await import(/* webpackChunkName: "cropperjs" */ 'cropperjs')).default;
     $('#add-avatar').on('click', function () {
-      require(['uploader'], function (uploader) {
-        uploader.show(
-          {
-            route: config.relative_path + '/api/admin/upload/file',
-            params: { folder: 'avatars' },
-            accept: 'image/*',
-          },
-          function (imageUrl) {
-            pictureCropper.handleImageCrop(
-              {
-                url: imageUrl,
-                socketMethod: 'plugins.avatargallery.uploadAvatar',
-                aspectRatio: 1,
-                allowSkippingCrop: false,
-                restrictImageDimension: true,
-                imageDimension: 256,
-                paramName: 'avatar',
-              },
-              function (croppedImageUrl) {
-                showAvatarDetailsModal(croppedImageUrl);
-              }
-            );
-          }
-        );
-      });
+      pictureCropper.show(
+        {
+          route: config.relative_path + '/api/admin/upload/file',
+          params: { folder: 'avatars' },
+          title: 'Upload Avatar',
+          socketMethod: 'plugins.avatargallery.uploadAvatar',
+          aspectRatio: 1,
+          allowSkippingCrop: false,
+          restrictImageDimension: true,
+          imageDimension: 256,
+          paramName: 'avatar',
+        },
+        function (imageUrl) {
+          showAvatarDetailsModal(imageUrl);
+        }
+      );
     });
 
     function showAvatarDetailsModal(imageUrl) {
