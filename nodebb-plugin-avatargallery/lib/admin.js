@@ -3,12 +3,11 @@
 const { head } = require('../../../src/request');
 const uploader = require('uploader');
 
-define('admin/plugins/avatargallery', ['api', 'cropper'], function (api, Cropper) {
+define('admin/plugins/avatargallery', ['api', 'pictureCropper'], function (api, pictureCropper) {
   var AvatarGallery = {};
   let avatarToDelete;
   let previousModal = null;
-  let cropper;
-  let tempImagePath;
+  let croppedImageBlob;
 
   function showError(message) {
     // Store the currently open modal
@@ -29,72 +28,57 @@ define('admin/plugins/avatargallery', ['api', 'cropper'], function (api, Cropper
   }
 
   AvatarGallery.init = function () {
-    // Step 1: Upload Image
-    $('#upload-avatar').on('click', function () {
-      var formData = new FormData();
-      formData.append('avatar', $('#avatar-file')[0].files[0]);
-
-      api.post('/plugins/avatargallery/upload-temp', formData, function (err, response) {
-        if (err) {
-          showError('Error uploading image: ' + err.message);
-        } else {
-          tempImagePath = response.path;
+    // Step 1: Upload and Crop Image
+    $('#avatar-file').on('change', function (e) {
+      const file = e.target.files[0];
+      pictureCropper.show(
+        {
+          title: 'Crop Avatar',
+          socketMethod: 'plugins.avatargallery.uploadAvatar',
+          aspectRatio: 1,
+          allowSkippingCrop: false,
+          restrictImageDimension: true,
+          imageDimension: 256, // or whatever size you prefer
+          paramName: 'avatar',
+          fileSize: 2048, // 2MB limit, adjust as needed
+        },
+        function (imageUrl) {
+          // Handle the cropped image URL
+          $('#cropped-image').attr('src', imageUrl);
           $('.step-1').addClass('d-none');
-          $('.step-2').removeClass('d-none');
-          $('#cropped-image').attr('src', tempImagePath);
-          initCropper();
+          $('.step-3').removeClass('d-none');
         }
-      });
+      );
     });
 
-    // Step 2: Crop Image
-    function initCropper() {
-      cropper = new Cropper($('#cropped-image')[0], {
-        aspectRatio: 1,
-        viewMode: 1,
-      });
-    }
-
-    $('#crop-avatar').on('click', function () {
-      var croppedCanvas = cropper.getCroppedCanvas();
-      croppedCanvas.toBlob(function (blob) {
-        var formData = new FormData();
-        formData.append('croppedAvatar', blob);
-
-        api.post('/plugins/avatargallery/crop-temp', formData, function (err, response) {
-          if (err) {
-            showError('Error cropping image: ' + err.message);
-          } else {
-            tempImagePath = response.path;
-            $('.step-2').addClass('d-none');
-            $('.step-3').removeClass('d-none');
-          }
-        });
-      });
-    });
-
-    // Step 3: Save Avatar
+    // Step 2: Save Avatar
     $('#save-avatar').on('click', function () {
-      var avatarData = {
-        name: $('#avatar-name').val(),
-        accessLevel: $('#avatar-access').val(),
-        tempPath: tempImagePath,
-      };
+      const avatarName = $('#avatar-name').val();
+      const accessLevel = $('#avatar-access').val();
+      const imageUrl = $('#cropped-image').attr('src');
 
-      if (avatarData.name === '') {
-        showError('Please enter a name for the avatar');
+      if (!avatarName || !imageUrl) {
+        showError('Please enter a name for the avatar and crop an image');
         return;
       }
 
-      api.post('/plugins/avatargallery/add', avatarData, function (err, response) {
-        if (err) {
-          showError('Error saving avatar: ' + err.message);
-        } else {
-          $('#addAvatarModal').modal('hide');
-          resetAddAvatarModal();
-          refreshAvatarList();
+      api.post(
+        '/plugins/avatargallery/add',
+        {
+          name: avatarName,
+          accessLevel: accessLevel,
+          imageData: imageUrl,
+        },
+        function (err, response) {
+          if (err) {
+            showError('Error saving avatar: ' + err.message);
+          } else {
+            $('#addAvatarModal').modal('hide');
+            resetAddAvatarModal();
+            refreshAvatarList();
+          }
         }
-      });
+      );
     });
 
     function resetAddAvatarModal() {
@@ -106,7 +90,7 @@ define('admin/plugins/avatargallery', ['api', 'cropper'], function (api, Cropper
       if (cropper) {
         cropper.destroy();
       }
-      tempImagePath = null;
+      croppedImageBlob = null;
     }
 
     $('#addAvatarModal').on('hidden.bs.modal', function () {
