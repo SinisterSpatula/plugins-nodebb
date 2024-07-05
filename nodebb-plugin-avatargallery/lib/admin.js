@@ -3,7 +3,7 @@
 const { head } = require('../../../src/request');
 const uploader = require('uploader');
 
-define('admin/plugins/avatargallery', ['api', 'pictureCropper'], function (api, pictureCropper) {
+define('admin/plugins/avatargallery', ['api', 'cropperjs', 'bootbox'], function (api, Cropper, bootbox) {
   var AvatarGallery = {};
   let avatarToDelete;
   let previousModal = null;
@@ -71,6 +71,25 @@ define('admin/plugins/avatargallery', ['api', 'pictureCropper'], function (api, 
             };
             reader.readAsDataURL(file);
           }
+        });
+        cropperContainer.find('.rotate').on('click', function () {
+          const degrees = parseInt(this.getAttribute('data-degrees'), 10);
+          cropper.rotate(degrees);
+        });
+
+        cropperContainer.find('.reset').on('click', function () {
+          cropper.reset();
+        });
+
+        cropperContainer.find('.flip').on('click', function () {
+          const option = parseInt(this.getAttribute('data-option'), 10);
+          const method = this.getAttribute('data-method');
+          if (method === 'scaleX') {
+            cropper.scaleX(option);
+          } else {
+            cropper.scaleY(option);
+          }
+          this.setAttribute('data-option', option * -1);
         });
       });
     });

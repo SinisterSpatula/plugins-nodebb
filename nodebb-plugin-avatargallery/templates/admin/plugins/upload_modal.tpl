@@ -28,4 +28,13 @@
 </div>
 <div id="cropper-container" class="mt-3 d-none">
     <img id="cropper-image" src="" alt="Image to crop" style="max-width: 100%;">
+    <div class="d-flex justify-content-center mt-2">
+        <div class="btn-group">
+            <button class="btn btn-primary rotate" data-degrees="-45"><i class="fa fa-rotate-left"></i></button>
+            <button class="btn btn-primary rotate" data-degrees="45"><i class="fa fa-rotate-right"></i></button>
+            <button class="btn btn-primary flip" data-option="1" data-method="scaleX"><i class="fa fa-arrows-h"></i></button>
+            <button class="btn btn-primary flip" data-option="1" data-method="scaleY"><i class="fa fa-arrows-v"></i></button>
+            <button class="btn btn-primary reset">Reset</button>
+        </div>
+    </div>
 </div>
