@@ -7,7 +7,6 @@ define('admin/plugins/avatargallery', ['api', 'pictureCropper'], function (api, 
   var AvatarGallery = {};
   let avatarToDelete;
   let previousModal = null;
-  let croppedImageBlob;
 
   function showError(message) {
     // Store the currently open modal
@@ -27,23 +26,34 @@ define('admin/plugins/avatargallery', ['api', 'pictureCropper'], function (api, 
     });
   }
 
-  AvatarGallery.init = function () {
+  AvatarGallery.init = async function () {
+    const Cropper = (await import(/* webpackChunkName: "cropperjs" */ 'cropperjs')).default;
     $('#add-avatar').on('click', function () {
-      pictureCropper.show(
-        {
-          title: 'Add New Avatar',
-          socketMethod: 'plugins.avatargallery.uploadAvatar',
-          aspectRatio: 1,
-          allowSkippingCrop: false,
-          restrictImageDimension: true,
-          imageDimension: 256,
-          paramName: 'avatar',
-          fileSize: 2048,
-        },
-        function (imageUrl) {
-          showAvatarDetailsModal(imageUrl);
-        }
-      );
+      require(['uploader'], function (uploader) {
+        uploader.show(
+          {
+            route: config.relative_path + '/api/admin/upload/file',
+            params: { folder: 'avatars' },
+            accept: 'image/*',
+          },
+          function (imageUrl) {
+            pictureCropper.handleImageCrop(
+              {
+                url: imageUrl,
+                socketMethod: 'plugins.avatargallery.uploadAvatar',
+                aspectRatio: 1,
+                allowSkippingCrop: false,
+                restrictImageDimension: true,
+                imageDimension: 256,
+                paramName: 'avatar',
+              },
+              function (croppedImageUrl) {
+                showAvatarDetailsModal(croppedImageUrl);
+              }
+            );
+          }
+        );
+      });
     });
 
     function showAvatarDetailsModal(imageUrl) {
