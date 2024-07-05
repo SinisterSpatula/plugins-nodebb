@@ -10,7 +10,7 @@
                 <div class="card-body">
                     <div class="row mb-3">
                         <div class="col-lg-6">
-                            <button id="add-avatar" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAvatarModal">
+                            <button id="add-avatar" class="btn btn-primary">
                                 <i class="fa fa-plus"></i> Add New Avatar
                             </button>
                         </div>
@@ -58,43 +58,6 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div class="modal fade" id="addAvatarModal" tabindex="-1" role="dialog" aria-labelledby="addAvatarModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addAvatarModalLabel">Add New Avatar</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="add-avatar-form">
-                    <div class="mb-3">
-                        <label for="avatar-file" class="form-label">Upload Image</label>
-                        <input type="file" class="form-control" id="avatar-file" accept="image/*" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="avatar-name" class="form-label">Avatar Name</label>
-                        <input type="text" class="form-control" id="avatar-name" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="avatar-access" class="form-label">Access Level</label>
-                        <select class="form-select" id="avatar-access" required>
-                            <option value="users">All Users</option>
-                            <option value="moderators">Moderators & Above</option>
-                            <option value="global_moderators">Global Moderators & Administrators</option>
-                            <option value="administrators">Administrators Only</option>
-                        </select>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="save-avatar">Save Avatar</button>
             </div>
         </div>
     </div>
