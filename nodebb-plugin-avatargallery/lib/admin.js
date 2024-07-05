@@ -7,6 +7,7 @@ define('admin/plugins/avatargallery', ['api', 'pictureCropper'], function (api, 
   var AvatarGallery = {};
   let avatarToDelete;
   let previousModal = null;
+  let cropper;
 
   function showError(message) {
     // Store the currently open modal
@@ -28,7 +29,7 @@ define('admin/plugins/avatargallery', ['api', 'pictureCropper'], function (api, 
 
   AvatarGallery.init = async function () {
     $('#add-avatar').on('click', function () {
-      app.parseAndTranslate('plugins/avatargallery/partials/upload_modal', {}, function (html) {
+      app.parseAndTranslate('admin/plugins/upload_modal', {}, function (html) {
         var modal = bootbox.dialog({
           title: 'Add New Avatar',
           message: html,
@@ -42,29 +43,31 @@ define('admin/plugins/avatargallery', ['api', 'pictureCropper'], function (api, 
           },
         });
 
-        var imagePreview = modal.find('#avatar-preview');
         var fileInput = modal.find('#avatar-file-input');
+        var previewContainer = modal.find('#avatar-preview-container');
+        var previewImage = modal.find('#avatar-preview');
+        var cropperContainer = modal.find('#cropper-container');
+        var cropperImage = modal.find('#cropper-image');
 
         fileInput.on('change', function (e) {
           var file = e.target.files[0];
           if (file) {
             var reader = new FileReader();
             reader.onload = function (e) {
-              pictureCropper.show(
-                {
-                  title: 'Crop Avatar',
-                  socketMethod: 'plugins.avatargallery.uploadAvatar',
-                  aspectRatio: 1,
-                  allowSkippingCrop: false,
-                  restrictImageDimension: true,
-                  imageDimension: 256,
-                  paramName: 'avatar',
-                  imageData: e.target.result,
-                },
-                function (imageData) {
-                  imagePreview.attr('src', imageData);
-                }
-              );
+              previewContainer.addClass('d-none');
+              previewImage.attr('src', e.target.result).removeClass('d-none');
+              cropperContainer.removeClass('d-none');
+              cropperImage.attr('src', e.target.result);
+
+              if (cropper) {
+                cropper.destroy();
+              }
+              cropper = new Cropper(cropperImage[0], {
+                aspectRatio: 1,
+                viewMode: 1,
+                minCropBoxWidth: 128,
+                minCropBoxHeight: 128,
+              });
             };
             reader.readAsDataURL(file);
           }
@@ -76,27 +79,27 @@ define('admin/plugins/avatargallery', ['api', 'pictureCropper'], function (api, 
       var modal = $(this).closest('.modal');
       var avatarName = modal.find('#avatar-name').val();
       var accessLevel = modal.find('#avatar-access').val();
-      var imageData = modal.find('#avatar-preview').attr('src');
 
-      if (!avatarName || !accessLevel || !imageData) {
+      if (!avatarName || !accessLevel || !cropper) {
         return app.alertError('Please fill all fields and crop an image');
       }
 
-      api.post(
-        '/plugins/avatargallery/add',
-        {
-          name: avatarName,
-          accessLevel: accessLevel,
-          imageData: imageData,
-        },
-        function (err, response) {
-          if (err) {
-            return app.alertError(err.message);
-          }
-          modal.modal('hide');
-          refreshAvatarList();
-        }
-      );
+      cropper.getCroppedCanvas().toBlob(function (blob) {
+        var formData = new FormData();
+        formData.append('avatar', blob, 'avatar.png');
+        formData.append('name', avatarName);
+        formData.append('accessLevel', accessLevel);
+
+        api
+          .post('/plugins/avatargallery/add', formData)
+          .then(function (response) {
+            modal.modal('hide');
+            refreshAvatarList();
+          })
+          .catch(function (error) {
+            app.alertError('Error uploading avatar: ' + error.message);
+          });
+      });
     }
 
     function refreshAvatarList() {

@@ -11,13 +11,15 @@ Controllers.renderAdminPage = function (req, res) {
 };
 
 Controllers.addAvatar = async function (req, res) {
-  let { name, file, accessLevel } = req.body;
+  let { name, accessLevel } = req.body;
+  let file = req.files.avatar;
   winston.info('[plugins/avatargallery] addAvatar called');
   winston.info(`[plugins/avatargallery] Name: ${name}`);
   winston.info(`[plugins/avatargallery] File: ${JSON.stringify(file)}`);
   winston.info(`[plugins/avatargallery] AccessLevel: ${accessLevel}`);
   try {
     // Implementation for adding an avatar
+    // Here you would save the file, process it if needed, and save the avatar info to your database
     res.json({ success: true, message: 'Avatar added successfully' });
   } catch (err) {
     res.status(500).json({ error: err.message });
