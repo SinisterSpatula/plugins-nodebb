@@ -116,10 +116,10 @@ define('admin/plugins/avatargallery', ['api', 'cropper'], function (api, Cropper
     function refreshAvatarList() {
       api
         .get('/plugins/avatargallery/list', {})
-        .then((avatars) => {
+        .then((response) => {
           const container = $('#avatar-container');
           container.empty();
-          avatars.forEach((avatar) => {
+          response.avatars.forEach((avatar) => {
             const avatarHtml = `
             <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
               <div class="card h-100">
@@ -246,6 +246,7 @@ define('admin/plugins/avatargallery', ['api', 'cropper'], function (api, Cropper
       }
     });
 
+    refreshAvatarList();
     console.log('Avatar Gallery loaded admin panel script initialized!');
   };
 
