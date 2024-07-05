@@ -59,15 +59,6 @@ plugin.deactivate = async function (params) {
   }
 };
 
-plugin.uploadImage = function (data) {
-  // This hook is called when a user tries to upload a new profile picture
-  winston.info('[plugins/avatargallery] uploadImage hook called');
-  if (data.image.name === 'profileAvatar') {
-    throw new Error('Unable to upload user profile images while avatargallery plugin is enabled.');
-  }
-  return data;
-};
-
 plugin.addRoutes = async ({ router, middleware, helpers }) => {
   const middlewares = [middleware.ensureLoggedIn, middleware.admin.checkPrivileges];
   // Set up the API routes
@@ -76,8 +67,6 @@ plugin.addRoutes = async ({ router, middleware, helpers }) => {
   routeHelpers.setupApiRoute(router, 'post', '/avatargallery/add', middlewares, controllers.addAvatar);
   routeHelpers.setupApiRoute(router, 'put', '/avatargallery/edit', middlewares, controllers.editAvatar);
   routeHelpers.setupApiRoute(router, 'delete', '/avatargallery/delete', middlewares, controllers.deleteAvatar);
-  routeHelpers.setupApiRoute(router, 'post', '/avatargallery/upload-temp', middlewares, controllers.uploadTemp);
-  routeHelpers.setupApiRoute(router, 'post', '/avatargallery/crop-temp', middlewares, controllers.cropTemp);
   routeHelpers.setupApiRoute(router, 'get', '/avatargallery/list', middlewares, controllers.listAvatars);
 };
 

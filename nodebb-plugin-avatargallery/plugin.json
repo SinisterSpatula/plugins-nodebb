@@ -6,7 +6,6 @@
     { "hook": "static:app.load", "method": "init" },
     { "hook": "static:api.routes", "method": "addRoutes" },
     { "hook": "filter:admin.header.build", "method": "addAdminNavigation" },
-    { "hook": "filter:uploadImage", "method": "uploadImage" },
     { "hook": "action:plugin.activate", "method": "activate" },
     { "hook": "action:plugin.deactivate", "method": "deactivate" }
   ],

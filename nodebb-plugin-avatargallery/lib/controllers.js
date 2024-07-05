@@ -44,26 +44,6 @@ Controllers.deleteAvatar = async function (req, res) {
   }
 };
 
-Controllers.uploadTemp = async function (req, res) {
-  winston.info('[plugins/avatargallery] uploadTemp called');
-  try {
-    // Implementation for uploading a temp avatar
-    res.json({ success: true, message: 'Temp avatar uploaded successfully' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-Controllers.cropTemp = async function (req, res) {
-  winston.info('[plugins/avatargallery] cropTemp called');
-  try {
-    // Implementation for cropping a temp avatar
-    res.json({ success: true, message: 'Temp avatar cropped successfully' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
 Controllers.listAvatars = async function (req, res) {
   winston.info('[plugins/avatargallery] listAvatars called');
   try {
