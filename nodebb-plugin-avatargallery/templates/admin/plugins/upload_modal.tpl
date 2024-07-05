@@ -19,15 +19,16 @@
         </div>
     </div>
     <div class="col-md-3 d-flex flex-column justify-content-center">
-        <div id="avatar-preview-container" class="border border-2 border-dashed rounded p-3 text-center text-muted d-flex flex-column justify-content-center align-items-center" style="height: 200px;">
-            <i class="fa fa-user fa-4x mb-2"></i>
-            <p class="mb-0">Preview</p>
+        <div id="cropper-preview" class="rounded" style="overflow: hidden">
+            <div class="border border-2 border-dashed rounded p-3 text-center text-muted d-flex flex-column justify-content-center align-items-center" style="height: 200px;">
+                <i class="fa fa-user fa-4x mb-2"></i>
+                <p class="mb-0">Preview</p>
+            </div>
         </div>
-        <img id="avatar-preview" src="" alt="Avatar Preview" class="img-fluid d-none">
     </div>
 </div>
 <div id="cropper-container" class="mt-3 d-none">
-    <img id="cropper-image" src="" alt="Image to crop" style="max-width: 100%;">
+    <img id="cropper-image" src="" alt="Image to crop" style="max-height: 500px;">
     <div class="d-flex justify-content-center mt-2">
         <div class="btn-group">
             <button class="btn btn-primary rotate" data-degrees="-45"><i class="fa fa-rotate-left"></i></button>

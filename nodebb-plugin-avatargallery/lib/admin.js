@@ -44,8 +44,6 @@ define('admin/plugins/avatargallery', ['api', 'cropperjs', 'bootbox'], function 
         });
 
         var fileInput = modal.find('#avatar-file-input');
-        var previewContainer = modal.find('#avatar-preview-container');
-        var previewImage = modal.find('#avatar-preview');
         var cropperContainer = modal.find('#cropper-container');
         var cropperImage = modal.find('#cropper-image');
 
@@ -54,8 +52,6 @@ define('admin/plugins/avatargallery', ['api', 'cropperjs', 'bootbox'], function 
           if (file) {
             var reader = new FileReader();
             reader.onload = function (e) {
-              previewContainer.addClass('d-none');
-              previewImage.attr('src', e.target.result).removeClass('d-none');
               cropperContainer.removeClass('d-none');
               cropperImage.attr('src', e.target.result);
 
@@ -64,9 +60,17 @@ define('admin/plugins/avatargallery', ['api', 'cropperjs', 'bootbox'], function 
               }
               cropper = new Cropper(cropperImage[0], {
                 aspectRatio: 1,
+                autoCropArea: 1,
                 viewMode: 1,
-                minCropBoxWidth: 128,
-                minCropBoxHeight: 128,
+                minCropBoxWidth: 256,
+                minCropBoxHeight: 256,
+                preview: '#cropper-preview',
+                ready: function () {
+                  cropper.setCanvasData({
+                    width: 150,
+                    height: 150,
+                  });
+                },
               });
             };
             reader.readAsDataURL(file);
