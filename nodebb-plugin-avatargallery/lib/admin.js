@@ -99,6 +99,7 @@ define('admin/plugins/avatargallery', ['api', 'cropperjs', 'bootbox', 'alerts'],
           .then(function (response) {
             modal.modal('hide');
             refreshAvatarList();
+            alerts.success('Avatar added to gallery successfully');
           })
           .catch(function (error) {
             alerts.error('Error uploading avatar: ' + error.message);
@@ -210,6 +211,7 @@ define('admin/plugins/avatargallery', ['api', 'cropperjs', 'bootbox', 'alerts'],
           card.find('.card-text small').text(newAccess.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()));
           $('#editAvatarModal').modal('hide');
           resetSearch();
+          alerts.success('Avatar updated successfully');
         })
         .catch((error) => {
           // Handle error
@@ -231,6 +233,7 @@ define('admin/plugins/avatargallery', ['api', 'cropperjs', 'bootbox', 'alerts'],
               .remove();
             $('#deleteAvatarModal').modal('hide');
             resetSearch();
+            alerts.success('Avatar deleted successfully');
           })
           .catch((error) => {
             // Handle error

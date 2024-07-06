@@ -11,11 +11,11 @@ Controllers.renderAdminPage = function (req, res) {
 };
 
 Controllers.addAvatar = async function (req, res) {
-  let { name, accessLevel, avatar } = req.body;
-  // let file = req.files.avatar;
+  let { name, accessLevel } = req.body;
+  let file = req.files.avatar;
   winston.info('[plugins/avatargallery] addAvatar called');
   winston.info(`[plugins/avatargallery] Name: ${name}`);
-  winston.info(`[plugins/avatargallery] Avatar: ${JSON.stringify(avatar)}`);
+  winston.info(`[plugins/avatargallery] file: ${JSON.stringify(file)}`);
   winston.info(`[plugins/avatargallery] AccessLevel: ${accessLevel}`);
   try {
     // Implementation for adding an avatar
