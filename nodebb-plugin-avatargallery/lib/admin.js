@@ -6,37 +6,18 @@ const uploader = require('uploader');
 define('admin/plugins/avatargallery', ['api', 'cropperjs', 'bootbox'], function (api, Cropper, bootbox) {
   var AvatarGallery = {};
   let avatarToDelete;
-  let previousModal = null;
   let cropper;
-
-  function showError(message) {
-    // Store the currently open modal
-    previousModal = $('.modal:visible').attr('id');
-    // hide any visible modals first.
-    $('#errorModal').modal('hide');
-    $('#addAvatarModal').modal('hide');
-    $('#editAvatarModal').modal('hide');
-    $('#deleteAvatarModal').modal('hide');
-    $('#errorMessage').text(message);
-    $('#errorModal').modal('show');
-    $('#errorModal').on('hidden.bs.modal', function () {
-      if (previousModal) {
-        $(`#${previousModal}`).modal('show');
-        previousModal = null;
-      }
-    });
-  }
 
   AvatarGallery.init = async function () {
     $('#add-avatar').on('click', function () {
-      app.parseAndTranslate('admin/plugins/upload_modal', {}, function (html) {
+      app.parseAndTranslate('admin/plugins/addavatar_modal', {}, function (html) {
         var modal = bootbox.dialog({
           title: 'Add New Avatar',
           message: html,
           size: 'large',
           buttons: {
             save: {
-              label: 'Save Avatar',
+              label: 'Finish',
               className: 'btn-primary',
               callback: saveAvatar,
             },
@@ -104,7 +85,7 @@ define('admin/plugins/avatargallery', ['api', 'cropperjs', 'bootbox'], function 
       var accessLevel = modal.find('#avatar-access').val();
 
       if (!avatarName || !accessLevel || !cropper) {
-        return app.alertError('Please fill all fields and crop an image');
+        return alerts.error('Please fill all fields and crop an image');
       }
 
       cropper.getCroppedCanvas().toBlob(function (blob) {
@@ -120,7 +101,7 @@ define('admin/plugins/avatargallery', ['api', 'cropperjs', 'bootbox'], function 
             refreshAvatarList();
           })
           .catch(function (error) {
-            app.alertError('Error uploading avatar: ' + error.message);
+            alerts.error('Error uploading avatar: ' + error.message);
           });
       });
     }
@@ -154,7 +135,7 @@ define('admin/plugins/avatargallery', ['api', 'cropperjs', 'bootbox'], function 
           });
         })
         .catch((error) => {
-          showError('Error refreshing avatar list: ' + error.message);
+          alerts.error('Error refreshing avatar list: ' + error.message);
         });
     }
 
@@ -207,15 +188,15 @@ define('admin/plugins/avatargallery', ['api', 'cropperjs', 'bootbox'], function 
       var newAccess = $('#edit-avatar-access').val();
 
       if (avatarId == '' || avatarId == 'undefined' || avatarId == 'null') {
-        showError('Please select an avatar to edit');
+        alerts.error('Please select an avatar to edit');
         return;
       }
       if (newName == '' || newName == 'undefined' || newName == 'null') {
-        showError('Please enter a name for the avatar');
+        alerts.error('Please enter a name for the avatar');
         return;
       }
       if (newAccess !== 'users' && newAccess !== 'moderators' && newAccess !== 'global_moderators' && newAccess !== 'administrators') {
-        showError('Please select an access level for the avatar');
+        alerts.error('Please select an access level for the avatar');
         return;
       }
       // Add your AJAX call here to submit the updated avatar info to your backend
@@ -232,7 +213,7 @@ define('admin/plugins/avatargallery', ['api', 'cropperjs', 'bootbox'], function 
         })
         .catch((error) => {
           // Handle error
-          showError('Error updating avatar:', error.message);
+          alerts.error('Error updating avatar:', error.message);
         });
     });
 
@@ -253,7 +234,7 @@ define('admin/plugins/avatargallery', ['api', 'cropperjs', 'bootbox'], function 
           })
           .catch((error) => {
             // Handle error
-            showError('Error deleting avatar:', error.message);
+            alerts.error('Error deleting avatar:', error.message);
           });
       }
     });

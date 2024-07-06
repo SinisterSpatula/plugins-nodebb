@@ -10,7 +10,7 @@
                 <div class="card-body">
                     <div class="row mb-3">
                         <div class="col-lg-6">
-                            <button id="add-avatar" class="btn btn-primary">
+                            <button id="add-avatar" class="btn btn-primary mb-3">
                                 <i class="fa fa-plus"></i> Add New Avatar
                             </button>
                         </div>
