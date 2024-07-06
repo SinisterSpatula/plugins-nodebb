@@ -76,6 +76,9 @@ define('admin/plugins/avatargallery', ['api', 'cropperjs', 'bootbox', 'alerts'],
           $('#cropper-container').toggle();
           cropper.reset();
         });
+        modal.on('shown.bs.modal', function () {
+          modal.find('input').focus();
+        });
       });
     });
 
