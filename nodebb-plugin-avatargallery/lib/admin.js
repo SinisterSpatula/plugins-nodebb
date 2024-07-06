@@ -3,7 +3,7 @@
 const { head } = require('../../../src/request');
 const uploader = require('uploader');
 
-define('admin/plugins/avatargallery', ['api', 'cropperjs', 'bootbox'], function (api, Cropper, bootbox) {
+define('admin/plugins/avatargallery', ['api', 'cropperjs', 'bootbox', 'alerts'], function (api, Cropper, bootbox, alerts) {
   var AvatarGallery = {};
   let avatarToDelete;
   let cropper;
