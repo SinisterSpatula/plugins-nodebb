@@ -40,7 +40,7 @@
             <button class="btn btn-primary rotate" data-degrees="-45"><i class="fa fa-rotate-left"></i></button>
             <button class="btn btn-primary rotate" data-degrees="45"><i class="fa fa-rotate-right"></i></button>
             <button class="btn btn-primary flip" data-option="-1" data-method="scaleX"><i class="fa fa-arrows-h"></i></button>
-            <button class="btn btn-primary flip" data-option="1" data-method="scaleY"><i class="fa fa-arrows-v"></i></button>
+            <button class="btn btn-primary flip" data-option="-1" data-method="scaleY"><i class="fa fa-arrows-v"></i></button>
             <button class="btn btn-primary reset">Reset</button>
         </div>
     </div>
