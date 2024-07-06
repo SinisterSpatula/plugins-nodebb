@@ -17,6 +17,12 @@
                 <option value="administrators">Administrators Only</option>
             </select>
         </div>
+        <div class="form-group mb-3">
+            <div class="form-check">
+                <input type="checkbox" id="skip-cropping" class="form-check-input" disabled>
+                <label for="skip-cropping" class="form-check-label">Upload without cropping</label>
+            </div>
+        </div>
     </div>
     <div class="col-md-3 d-flex flex-column justify-content-center">
         <div id="cropper-preview" class="rounded" style="overflow: hidden">
@@ -28,7 +34,7 @@
     </div>
 </div>
 <div id="cropper-container" class="mt-3 d-none">
-    <img id="cropper-image" src="" alt="Image to crop" style="max-height: 500px;">
+    <img id="cropper-image" src="" alt="Image to crop" style="max-height: 400px;">
     <div class="d-flex justify-content-center mt-2">
         <div class="btn-group">
             <button class="btn btn-primary rotate" data-degrees="-45"><i class="fa fa-rotate-left"></i></button>

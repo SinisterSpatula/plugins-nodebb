@@ -27,10 +27,12 @@ define('admin/plugins/avatargallery', ['api', 'cropperjs', 'bootbox', 'alerts'],
         var fileInput = modal.find('#avatar-file-input');
         var cropperContainer = modal.find('#cropper-container');
         var cropperImage = modal.find('#cropper-image');
+        var skipCropping = modal.find('#skip-cropping');
 
         fileInput.on('change', function (e) {
           var file = e.target.files[0];
           if (file) {
+            skipCropping.removeAttr('disabled');
             var reader = new FileReader();
             reader.onload = function (e) {
               cropperContainer.removeClass('d-none');
@@ -46,12 +48,6 @@ define('admin/plugins/avatargallery', ['api', 'cropperjs', 'bootbox', 'alerts'],
                 minCropBoxWidth: 256,
                 minCropBoxHeight: 256,
                 preview: '#cropper-preview',
-                ready: function () {
-                  cropper.setCanvasData({
-                    width: 150,
-                    height: 150,
-                  });
-                },
               });
             };
             reader.readAsDataURL(file);
@@ -75,6 +71,10 @@ define('admin/plugins/avatargallery', ['api', 'cropperjs', 'bootbox', 'alerts'],
             cropper.scaleY(option);
           }
           this.setAttribute('data-option', option * -1);
+        });
+        $('#skip-cropping').change(function () {
+          $('#cropper-container').toggle();
+          cropper.reset();
         });
       });
     });
