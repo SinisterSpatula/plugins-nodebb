@@ -111,19 +111,19 @@ define('admin/plugins/avatargallery', ['api', 'cropperjs', 'bootbox', 'alerts'],
           uploadAvatar(formData);
         });
       }
-    }
 
-    function uploadAvatar(formData) {
-      api
-        .post('/plugins/avatargallery/add', formData)
-        .then(function (response) {
-          modal.modal('hide');
-          refreshAvatarList();
-          alerts.success('Avatar added to gallery successfully');
-        })
-        .catch(function (error) {
-          alerts.error('Error uploading avatar: ' + error.message);
-        });
+      function uploadAvatar(formData) {
+        api
+          .post('/plugins/avatargallery/add', formData)
+          .then(function (response) {
+            modal.modal('hide');
+            refreshAvatarList();
+            alerts.success('Avatar added to gallery successfully');
+          })
+          .catch(function (error) {
+            alerts.error('Error uploading avatar: ' + error.message);
+          });
+      }
     }
 
     function refreshAvatarList() {
