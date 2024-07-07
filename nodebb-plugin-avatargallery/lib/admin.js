@@ -86,28 +86,44 @@ define('admin/plugins/avatargallery', ['api', 'cropperjs', 'bootbox', 'alerts'],
       var modal = $(this).closest('.modal');
       var avatarName = modal.find('#avatar-name').val();
       var accessLevel = modal.find('#avatar-access').val();
+      var skipCropping = modal.find('#skip-cropping').is(':checked');
 
-      if (!avatarName || !accessLevel || !cropper) {
-        return alerts.error('Please fill all fields and crop an image');
+      if (!avatarName || !accessLevel || (!skipCropping && !cropper)) {
+        return alerts.error('Please fill all fields and crop an image (or choose to skip cropping)');
       }
 
-      cropper.getCroppedCanvas().toBlob(function (blob) {
+      if (skipCropping) {
         var formData = new FormData();
-        formData.append('avatar', blob, 'avatar.png');
+        formData.append('avatar', $('#avatar-file-input')[0].files[0]);
         formData.append('name', avatarName);
         formData.append('accessLevel', accessLevel);
+        formData.append('skipCropping', true);
 
-        api
-          .post('/plugins/avatargallery/add', formData)
-          .then(function (response) {
-            modal.modal('hide');
-            refreshAvatarList();
-            alerts.success('Avatar added to gallery successfully');
-          })
-          .catch(function (error) {
-            alerts.error('Error uploading avatar: ' + error.message);
-          });
-      });
+        uploadAvatar(formData);
+      } else {
+        cropper.getCroppedCanvas().toBlob(function (blob) {
+          var formData = new FormData();
+          formData.append('avatar', blob, 'avatar.png');
+          formData.append('name', avatarName);
+          formData.append('accessLevel', accessLevel);
+          formData.append('skipCropping', false);
+
+          uploadAvatar(formData);
+        });
+      }
+    }
+
+    function uploadAvatar(formData) {
+      api
+        .post('/plugins/avatargallery/add', formData)
+        .then(function (response) {
+          modal.modal('hide');
+          refreshAvatarList();
+          alerts.success('Avatar added to gallery successfully');
+        })
+        .catch(function (error) {
+          alerts.error('Error uploading avatar: ' + error.message);
+        });
     }
 
     function refreshAvatarList() {

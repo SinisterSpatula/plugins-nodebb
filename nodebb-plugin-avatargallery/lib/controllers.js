@@ -11,20 +11,37 @@ Controllers.renderAdminPage = function (req, res) {
 };
 
 Controllers.addAvatar = async function (req, res) {
-  let { name, accessLevel } = req.body;
+  let { name, accessLevel, skipCropping } = req.body;
   let file = req.files.avatar;
-  winston.info('[plugins/avatargallery] addAvatar called');
-  winston.info(`[plugins/avatargallery] Name: ${name}`);
-  winston.info(`[plugins/avatargallery] file: ${JSON.stringify(file)}`);
-  winston.info(`[plugins/avatargallery] AccessLevel: ${accessLevel}`);
+
   try {
-    // Implementation for adding an avatar
-    // Here you would save the file, process it if needed, and save the avatar info to your database
+    let avatarPath;
+    if (skipCropping === 'true') {
+      avatarPath = await saveOriginalImage(file);
+    } else {
+      avatarPath = await processCroppedImage(file);
+    }
+
+    // Save avatar info to database
+    await saveAvatarToDatabase(name, accessLevel, avatarPath);
+
     res.json({ success: true, message: 'Avatar added successfully' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+
+async function saveOriginalImage(file) {
+  // Implementation to save the original image
+}
+
+async function processCroppedImage(file) {
+  // Implementation to process and save the cropped image
+}
+
+async function saveAvatarToDatabase(name, accessLevel, path) {
+  // Implementation to save avatar info to database
+}
 
 Controllers.editAvatar = async function (req, res) {
   winston.info('[plugins/avatargallery] editAvatar called');
