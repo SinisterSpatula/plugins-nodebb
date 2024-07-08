@@ -2,13 +2,13 @@
 
 const winston = require.main.require('winston');
 const path = require('path');
-const fs = require('fs').promises;
 const crypto = require('crypto');
 const db = require.main.require('./src/database');
 const file = require.main.require('./src/file');
 const nconf = require.main.require('nconf');
-const AVATAR_KEY = 'avatargallery:avatars';
+const user = require.main.require('./src/user');
 const Controllers = module.exports;
+const AVATAR_KEY = 'avatargallery:avatars';
 
 Controllers.renderAdminPage = function (req, res) {
   res.render('admin/plugins/avatargallery', {
@@ -70,9 +70,9 @@ Controllers.addAvatar = async function (req, res) {
 };
 
 Controllers.listAvatars = async function (req, res) {
-  winston.info('[plugins/avatargallery] listAvatars called');
   try {
     const avatars = (await db.getObject(AVATAR_KEY)) || { list: [] };
+    const userAccessLevel = await getUserAccessLevel(req.uid);
     const accessLevelOrder = ['users', 'moderators', 'global_moderators', 'administrators'];
 
     const sortedAvatars = avatars.list
@@ -86,10 +86,8 @@ Controllers.listAvatars = async function (req, res) {
         return a.name.localeCompare(b.name);
       });
 
-    res.json({
-      success: true,
-      avatars: sortedAvatars,
-    });
+    const filteredAvatars = filterAvatarsByAccessLevel(sortedAvatars, userAccessLevel);
+    res.json({ success: true, avatars: filteredAvatars });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -141,3 +139,49 @@ Controllers.deleteAvatar = async function (req, res) {
     res.status(500).json({ error: err.message });
   }
 };
+
+Controllers.updateUserPicture = async function (req, res) {
+  const { uid } = req.params;
+  const { avatarId } = req.body;
+
+  try {
+    const avatars = await db.getObject(AVATAR_KEY);
+    const avatar = avatars.list.find((a) => a.id === parseInt(avatarId));
+
+    if (!avatar) {
+      return res.status(404).json({ error: 'Avatar not found' });
+    }
+
+    const userAccessLevel = await getUserAccessLevel(req.uid);
+    if (!isAvatarAccessible(avatar, userAccessLevel)) {
+      return res.status(403).json({ error: 'You do not have permission to use this avatar' });
+    }
+
+    await user.setUserField(uid, 'picture', avatar.fileName.url);
+    await user.setUserField(uid, 'uploadedpicture', avatar.fileName.url);
+
+    res.json({ success: true, message: 'Avatar updated successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+async function getUserAccessLevel(uid) {
+  const [isAdmin, isGlobalMod, isModerator] = await Promise.all([user.isAdministrator(uid), user.isGlobalModerator(uid), user.isModerator(uid)]);
+
+  if (isAdmin) return 'administrators';
+  if (isGlobalMod) return 'global_moderators';
+  if (isModerator) return 'moderators';
+  return 'users';
+}
+
+function filterAvatarsByAccessLevel(avatars, userAccessLevel) {
+  const accessLevels = ['users', 'moderators', 'global_moderators', 'administrators'];
+  const userLevelIndex = accessLevels.indexOf(userAccessLevel);
+  return avatars.filter((avatar) => accessLevels.indexOf(avatar.accessLevel) <= userLevelIndex);
+}
+
+function isAvatarAccessible(avatar, userAccessLevel) {
+  const accessLevels = ['users', 'moderators', 'global_moderators', 'administrators'];
+  return accessLevels.indexOf(avatar.accessLevel) <= accessLevels.indexOf(userAccessLevel);
+}

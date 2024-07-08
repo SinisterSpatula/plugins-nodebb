@@ -67,7 +67,8 @@ plugin.addRoutes = async ({ router, middleware, helpers }) => {
   routeHelpers.setupApiRoute(router, 'post', '/avatargallery/add', middlewares, controllers.addAvatar);
   routeHelpers.setupApiRoute(router, 'put', '/avatargallery/edit', middlewares, controllers.editAvatar);
   routeHelpers.setupApiRoute(router, 'delete', '/avatargallery/delete', middlewares, controllers.deleteAvatar);
-  routeHelpers.setupApiRoute(router, 'get', '/avatargallery/list', middlewares, controllers.listAvatars);
+  routeHelpers.setupApiRoute(router, 'get', '/avatargallery/list', [middleware.ensureLoggedIn], controllers.listAvatars);
+  routeHelpers.setupApiRoute(router, 'put', '/users/:uid/picture', [middleware.ensureLoggedIn], controllers.updateUserPicture);
 };
 
 plugin.addAdminNavigation = (header) => {
