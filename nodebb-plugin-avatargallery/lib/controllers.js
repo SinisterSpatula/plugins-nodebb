@@ -5,7 +5,8 @@ const path = require('path');
 const fs = require('fs').promises;
 const crypto = require('crypto');
 const db = require.main.require('./src/database');
-const AVATAR_STORAGE_PATH = path.join(__dirname, '..', 'public', 'avatars');
+const file = require.main.require('./src/file');
+const nconf = require.main.require('nconf');
 const AVATAR_KEY = 'avatargallery:avatars';
 const Controllers = module.exports;
 
@@ -16,20 +17,18 @@ Controllers.renderAdminPage = function (req, res) {
   });
 };
 
-async function saveOriginalImage(file) {
-  const fileExtension = path.extname(file.originalFilename);
-  const fileName = `${Date.now()}-${crypto.randomBytes(4).toString('hex')}${fileExtension}`;
-  const filePath = path.join(AVATAR_STORAGE_PATH, fileName);
-
-  await fs.mkdir(AVATAR_STORAGE_PATH, { recursive: true });
-  await fs.copyFile(file.path, filePath);
-
-  return fileName;
+async function saveOriginalImage(uploadedFile) {
+  const fileName = `avatar-${Date.now()}-${crypto.randomBytes(4).toString('hex')}${path.extname(uploadedFile.name)}`;
+  const uploadResult = await file.saveFileToLocal(fileName, 'avatars', uploadedFile.path);
+  return {
+    url: nconf.get('relative_path') + uploadResult.url,
+    path: uploadResult.path,
+  };
 }
 
-async function processCroppedImage(file) {
-  // Similar to saveOriginalImage, but with image processing if needed
-  return await saveOriginalImage(file);
+async function processCroppedImage(uploadedFile) {
+  // If cropping is needed, implement it here before saving
+  return await saveOriginalImage(uploadedFile);
 }
 
 async function saveAvatarToDatabase(name, accessLevel, fileName) {
@@ -130,8 +129,8 @@ Controllers.deleteAvatar = async function (req, res) {
       return res.status(404).json({ error: 'Avatar not found' });
     }
 
-    const fileName = avatars.list[avatarIndex].fileName;
-    await fs.unlink(path.join(AVATAR_STORAGE_PATH, fileName));
+    const avatarPath = avatars.list[avatarIndex].path;
+    await file.delete(avatarPath);
 
     avatars.list.splice(avatarIndex, 1);
     await db.setObject(AVATAR_KEY, avatars);
