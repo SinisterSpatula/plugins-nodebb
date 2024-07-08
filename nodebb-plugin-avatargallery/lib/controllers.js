@@ -78,7 +78,7 @@ Controllers.listAvatars = async function (req, res) {
     const sortedAvatars = avatars.list
       .map((avatar) => ({
         ...avatar,
-        path: `/assets/plugins/nodebb-plugin-avatargallery/avatars/${avatar.fileName}`,
+        path: avatar.fileName.url,
       }))
       .sort((a, b) => {
         const accessLevelDiff = accessLevelOrder.indexOf(a.accessLevel) - accessLevelOrder.indexOf(b.accessLevel);
