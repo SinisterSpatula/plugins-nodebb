@@ -1,9 +1,10 @@
 'use strict';
 
-(function (AvatarGallery) {
+define('avatargallery/client', ['api', 'alerts'], function (api, alerts) {
+  const AvatarGallery = {};
   let selectedAvatarId = null;
 
-  AvatarGallery.init = function () {
+  AvatarGallery.init = function (params) {
     const avatarGallery = $('#avatar-gallery');
 
     api
@@ -15,7 +16,7 @@
         }
       })
       .catch((error) => {
-        app.alertError('Error loading avatars: ' + error.message);
+        alerts.error('Error loading avatars: ' + error.message);
       });
 
     avatarGallery.on('click', '.avatar-item', function () {
@@ -67,14 +68,14 @@
           avatarId: selectedAvatarId,
         })
         .then(() => {
-          app.alertSuccess('Avatar updated successfully');
+          alerts.success('Avatar updated successfully');
           ajaxify.refresh();
         })
         .catch((error) => {
-          app.alertError('Error updating avatar: ' + error.message);
+          alerts.error('Error updating avatar: ' + error.message);
         });
     }
   };
 
-  AvatarGallery.init();
-})((window.AvatarGallery = window.AvatarGallery || {}));
+  return AvatarGallery;
+});

@@ -6,4 +6,8 @@
     </div>
 </div>
 
-<script src="/assets/plugins/nodebb-plugin-avatargallery/static/avatargallery-client.js" defer></script>
+<script>
+    require(['avatargallery/client'], function (AvatarGallery) {
+        AvatarGallery.init();
+    });
+</script>

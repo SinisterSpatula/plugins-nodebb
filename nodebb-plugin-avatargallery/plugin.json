@@ -17,5 +17,6 @@
   "modules": {
     "../admin/plugins/avatargallery.js": "./lib/admin.js"
   },
+  "scripts": ["./lib/client.js"],
   "templates": "templates"
 }
