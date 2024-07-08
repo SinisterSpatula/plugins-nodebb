@@ -224,12 +224,9 @@ define('admin/plugins/avatargallery', ['api', 'cropperjs', 'bootbox', 'alerts'],
       api
         .put('/plugins/avatargallery/edit', { id: avatarId, name: newName, accessLevel: newAccess })
         .then((response) => {
-          // Update UI
-          var card = $('[data-id="' + avatarId + '"]').closest('.card');
-          card.find('.card-title').text(newName);
-          card.find('.card-text small').text(newAccess.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()));
           $('#editAvatarModal').modal('hide');
           resetSearch();
+          refreshAvatarList();
           alerts.success('Avatar updated successfully');
         })
         .catch((error) => {
@@ -246,12 +243,10 @@ define('admin/plugins/avatargallery', ['api', 'cropperjs', 'bootbox', 'alerts'],
         api
           .del('/plugins/avatargallery/delete', { id: avatarToDelete })
           .then((response) => {
-            // Remove the avatar from the UI
-            $('[data-id="' + avatarToDelete + '"]')
-              .closest('.col-12')
-              .remove();
             $('#deleteAvatarModal').modal('hide');
+            avatarToDelete = null;
             resetSearch();
+            refreshAvatarList();
             alerts.success('Avatar deleted successfully');
           })
           .catch((error) => {
