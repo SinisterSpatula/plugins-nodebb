@@ -5,9 +5,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    require(['avatargallery/client'], function (AvatarGallery) {
-        AvatarGallery.init();
-    });
-</script>

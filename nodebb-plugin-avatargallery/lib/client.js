@@ -1,10 +1,11 @@
 'use strict';
 
-define('avatargallery/client', ['api', 'alerts'], function (api, alerts) {
+define('forum/views/modals/change-picture', ['api', 'alerts'], function (api, alerts) {
   const AvatarGallery = {};
   let selectedAvatarId = null;
 
   AvatarGallery.init = function (params) {
+    console.log('AvatarGallery client side script initializing...');
     const avatarGallery = $('#avatar-gallery');
 
     api
