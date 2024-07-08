@@ -256,6 +256,17 @@ define('admin/plugins/avatargallery', ['api', 'cropperjs', 'bootbox', 'alerts'],
       }
     });
 
+    $('#editAvatarModal').on('shown.bs.modal', function () {
+      const modal = $(this);
+      const form = modal.find('form');
+      const nameInput = modal.find('#edit-avatar-name');
+      form.off('submit').on('submit', function (e) {
+        e.preventDefault();
+        $('#submit-edit-avatar').click();
+      });
+      nameInput.focus();
+    });
+
     refreshAvatarList();
     console.log('Avatar Gallery loaded admin panel script initialized!');
   };
