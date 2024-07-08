@@ -129,7 +129,8 @@ Controllers.deleteAvatar = async function (req, res) {
       return res.status(404).json({ error: 'Avatar not found' });
     }
 
-    const avatarPath = avatars.list[avatarIndex].path;
+    const avatarPath = avatars.list[avatarIndex].fileName.path;
+    winston.info(`[plugins/avatargallery] Deleting avatar ${avatarPath}`);
     await file.delete(avatarPath);
 
     avatars.list.splice(avatarIndex, 1);
