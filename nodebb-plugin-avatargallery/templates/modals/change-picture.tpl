@@ -6,4 +6,4 @@
     </div>
 </div>
 
-<script src="/plugins/nodebb-plugin-avatargallery/static/avatargallery-client.js" defer></script>
+<script src="/assets/plugins/nodebb-plugin-avatargallery/static/avatargallery-client.js" defer></script>
