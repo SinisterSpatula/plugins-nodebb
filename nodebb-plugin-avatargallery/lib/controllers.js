@@ -18,7 +18,7 @@ Controllers.renderAdminPage = function (req, res) {
 };
 
 async function saveOriginalImage(uploadedFile) {
-  const fileName = `avatar-${Date.now()}-${crypto.randomBytes(4).toString('hex')}${path.extname(uploadedFile.name)}`;
+  const fileName = `${crypto.randomBytes(4).toString('hex')}${path.extname(uploadedFile.name)}`;
   const uploadResult = await file.saveFileToLocal(fileName, 'avatars', uploadedFile.path);
   return {
     url: nconf.get('relative_path') + uploadResult.url,
