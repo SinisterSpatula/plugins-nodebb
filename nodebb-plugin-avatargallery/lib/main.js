@@ -29,19 +29,40 @@ define('forum/avatargallery', ['api', 'alerts', 'hooks'], function (api, alerts,
             title: 'Change Picture',
             message: html,
             size: 'large',
+            buttons: {
+              close: {
+                label: 'Close',
+                className: 'btn-outline-secondary',
+              },
+              save: {
+                label: 'Save Changes',
+                className: 'btn-primary',
+                callback: saveAvatarSelection,
+              },
+            },
           });
 
-          const avatarGallery = modal.find('#avatar-gallery');
-          avatars.forEach((avatar) => {
-            const avatarElement = $(`
-            <div class="col-md-3 col-sm-4 col-6 mb-3">
-              <div class="avatar-item" data-avatar-id="${avatar.id}">
-                <img src="${avatar.path}" alt="${avatar.name}" class="img-fluid rounded">
-                <p class="text-center mt-2">${avatar.name}</p>
-              </div>
+          const avatarGallery = $(`
+            <div class="avatar-gallery-container" style="max-height: 460px; overflow-y: auto; overflow-x: hidden;">
+              <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-3 mr-3" id="avatar-gallery"></div>
             </div>
           `);
-            avatarGallery.append(avatarElement);
+
+          modal.find('.modal-body').append(avatarGallery);
+
+          avatars.forEach((avatar) => {
+            const avatarElement = $(`
+              <div class="col">
+                <div class="avatar-item position-relative" data-avatar-id="${avatar.id}">
+                  <img src="${avatar.path}" alt="${avatar.name}" class="img-fluid rounded">
+                  <p class="text-center mt-2 small">${avatar.name}</p>
+                  <div class="avatar-selection-indicator d-none position-absolute top-0 start-0 w-100 h-100 bg-primary bg-opacity-25 d-flex justify-content-center align-items-center">
+                    <i class="fa fa-check fa-2x text-white"></i>
+                  </div>
+                </div>
+              </div>
+            `);
+            avatarGallery.find('#avatar-gallery').append(avatarElement);
           });
 
           handleAvatarSelection(modal);
@@ -54,31 +75,31 @@ define('forum/avatargallery', ['api', 'alerts', 'hooks'], function (api, alerts,
   }
 
   function handleAvatarSelection(modal) {
-    const avatarItems = modal.find('.avatar-item');
-    const saveButton = modal.find('[data-action="upload"]');
-    let selectedAvatarId = null;
+    const avatarItems = modal.find('#avatar-gallery .avatar-item');
 
     avatarItems.on('click', function () {
       avatarItems.removeClass('active');
+      avatarItems.find('.avatar-selection-indicator').addClass('d-none');
       $(this).addClass('active');
-      selectedAvatarId = $(this).data('avatar-id');
+      $(this).find('.avatar-selection-indicator').removeClass('d-none');
     });
+  }
 
-    saveButton.on('click', function () {
-      if (selectedAvatarId) {
-        api
-          .put(`/users/${ajaxify.data.theirid}/picture`, { avatarId: selectedAvatarId })
-          .then(() => {
-            modal.modal('hide');
-            ajaxify.refresh();
-          })
-          .catch((error) => {
-            console.error('Error updating avatar:', error);
-            alerts.error('Failed to update avatar');
-          });
-      } else {
-        alerts.error('Please select an avatar');
-      }
-    });
+  function saveAvatarSelection() {
+    const selectedAvatarId = $('.avatar-item.active').data('avatar-id');
+    if (selectedAvatarId) {
+      api
+        .put(`/users/${ajaxify.data.theirid}/picture`, { type: 'avatargallery', avatarId: selectedAvatarId })
+        .then(() => {
+          ajaxify.refresh();
+        })
+        .catch((error) => {
+          console.error('Error updating avatar:', error);
+          alerts.error('Failed to update avatar');
+        });
+    } else {
+      alerts.error('Please select an avatar');
+      return false; // Prevent modal from closing
+    }
   }
 });
