@@ -55,7 +55,7 @@ define('forum/avatargallery', ['api', 'alerts', 'hooks'], function (api, alerts,
               <div class="col">
                 <div class="avatar-item position-relative" data-avatar-id="${avatar.id}">
                   <img src="${avatar.path}" alt="${avatar.name}" class="img-fluid rounded">
-                  <p class="text-center mt-2 small">${avatar.name}</p>
+                  <p class="text-center mt-2 small fw-semibold">${avatar.name}</p>
                   <div class="avatar-selection-indicator d-none position-absolute top-0 start-0 w-100 h-100 bg-primary bg-opacity-25 d-flex justify-content-center align-items-center">
                     <i class="fa fa-check fa-2x text-white"></i>
                   </div>
