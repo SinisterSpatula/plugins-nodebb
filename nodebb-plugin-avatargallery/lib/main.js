@@ -26,16 +26,16 @@ define('forum/avatargallery', ['api', 'alerts', 'hooks'], function (api, alerts,
 
         app.parseAndTranslate('modals/change-picture', {}, (html) => {
           const modal = bootbox.dialog({
-            title: 'Change Picture',
+            title: '[[user:change-picture]]',
             message: html,
             size: 'large',
             buttons: {
               close: {
-                label: 'Close',
+                label: '[[global:buttons.close]]',
                 className: 'btn-outline-secondary',
               },
               save: {
-                label: 'Save Changes',
+                label: '[[global:save-changes]]',
                 className: 'btn-primary',
                 callback: saveAvatarSelection,
               },
