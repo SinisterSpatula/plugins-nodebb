@@ -2,7 +2,7 @@
 
 define('forum/avatargallery', ['api', 'alerts', 'hooks'], function (api, alerts, hooks) {
   hooks.on('action:ajaxify.end', () => {
-    if (ajaxify.data.template.name == 'account/profile') {
+    if (ajaxify.data.template.name.startsWith('account/')) {
       handleProfilePage();
     }
   });
