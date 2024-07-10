@@ -30,10 +30,6 @@ define('forum/avatargallery', ['api', 'alerts', 'hooks'], function (api, alerts,
             message: html,
             size: 'large',
             buttons: {
-              close: {
-                label: '[[global:buttons.close]]',
-                className: 'btn-outline-secondary',
-              },
               save: {
                 label: '[[global:save-changes]]',
                 className: 'btn-primary',
@@ -44,7 +40,7 @@ define('forum/avatargallery', ['api', 'alerts', 'hooks'], function (api, alerts,
 
           const avatarGallery = $(`
             <div class="avatar-gallery-container" style="max-height: 460px; overflow-y: auto; overflow-x: hidden;">
-              <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-3 mr-3" id="avatar-gallery"></div>
+              <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-3 me-2" id="avatar-gallery"></div>
             </div>
           `);
 
@@ -86,10 +82,14 @@ define('forum/avatargallery', ['api', 'alerts', 'hooks'], function (api, alerts,
   }
 
   function saveAvatarSelection() {
-    const selectedAvatarId = $('.avatar-item.active').data('avatar-id');
-    if (selectedAvatarId) {
+    const selectedAvatarUrl = $('.avatar-item.active img').attr('src');
+    console.log('selectedAvatarUrl', selectedAvatarUrl);
+    if (selectedAvatarUrl) {
       api
-        .put(`/users/${ajaxify.data.theirid}/picture`, { type: 'avatargallery', avatarId: selectedAvatarId })
+        .put(`/users/${ajaxify.data.theirid}/picture`, {
+          type: 'external',
+          url: selectedAvatarUrl,
+        })
         .then(() => {
           ajaxify.refresh();
         })
