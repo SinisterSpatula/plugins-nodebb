@@ -46,17 +46,21 @@ define('forum/avatargallery', ['api', 'alerts', 'hooks'], function (api, alerts,
 
           modal.find('.modal-body').append(avatarGallery);
 
+          // const currentAvatarUrl = ajaxify.data.picture ? decodeURIComponent(ajaxify.data.picture) : '';
+
           avatars.forEach((avatar) => {
+            const isActive = avatar.path === utils.decodeHTMLEntities(ajaxify.data.picture);
             const avatarElement = $(`
               <div class="col">
-                <div class="avatar-item position-relative" data-avatar-id="${avatar.id}">
-                  <img src="${avatar.path}" alt="${avatar.name}" class="img-fluid rounded">
-                  <p class="text-center mt-2 small fw-semibold">${avatar.name}</p>
-                  <div class="avatar-selection-indicator d-none position-absolute top-0 start-0 w-100 h-100 bg-primary bg-opacity-25 d-flex justify-content-center align-items-center">
-                    <i class="fa fa-check fa-2x text-white"></i>
-                  </div>
-                </div>
+              <div class="avatar-item position-relative ${isActive ? 'active' : ''}" data-avatar-id="${avatar.id}">
+                <img src="${avatar.path}" alt="${avatar.name}" class="img-fluid rounded">
+                <p class="text-center mt-2 small fw-semibold">${avatar.name}</p>
+                <div class="avatar-selection-indicator ${
+                  isActive ? '' : 'd-none'
+                } position-absolute top-0 start-0 w-100 h-100 bg-primary bg-opacity-50 d-flex justify-content-center align-items-center border border-3 border-white">
+                <i class="fa fa-check fa-4x text-white"></i></div>
               </div>
+            </div>
             `);
             avatarGallery.find('#avatar-gallery').append(avatarElement);
           });
